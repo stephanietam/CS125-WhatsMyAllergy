@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.content.Intent;
 
 public class Calendar extends AppCompatActivity {
 
@@ -24,7 +25,9 @@ public class Calendar extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                    mTextMessage.setText(R.string.title_activity_calendar);
+                    //Intent i = new Intent(MainActivity.);
+                    //startActivity(i);
                     return true;
             }
             return false;
