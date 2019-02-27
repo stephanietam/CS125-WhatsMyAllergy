@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         // Getting location key
         if (!globalState.checkLocationIsSet()) { // OR location is different
             AsyncTask asyncTask = new AccuWeatherApi(this).execute();
+        } else {
+            setTextViews();
         }
 
         // Waiting for symptoms button click
@@ -86,6 +90,57 @@ public class MainActivity extends AppCompatActivity {
         // Bottom Navigation
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    private void setTextViews() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                FiveDayForecast fiveDayForecast = globalState.getFiveDayForecast();
+
+                Pollen highestPollen = globalState.getFiveDayForecast().getDayN(0).getHighestPollutant();
+
+                TextView pollenValue = (TextView) findViewById(R.id.count_text);
+                pollenValue.setText(String.valueOf(highestPollen.getValue()));
+
+                TextView pollenCategory = (TextView) findViewById(R.id.severity_text);
+                pollenCategory.setText(highestPollen.getCategory());
+
+                TextView pollenName = (TextView) findViewById(R.id.name_text);
+                pollenName.setText(highestPollen.getName());
+
+                TextView locationText = (TextView) findViewById(R.id.location_text);
+                locationText.setText(globalState.getLocationName());
+
+                TextView severityText = (TextView) findViewById(R.id.severity_text);
+                severityText.setText(highestPollen.getSeverity());
+
+                TextView[] dayOne = new TextView[] {
+                        findViewById(R.id.day_one_label),
+                        findViewById(R.id.day_one_count)};
+                TextView[] dayTwo = new TextView[] {
+                        findViewById(R.id.day_two_label),
+                        findViewById(R.id.day_two_count)};
+                TextView[] dayThree = new TextView[] {
+                        findViewById(R.id.day_three_label),
+                        findViewById(R.id.day_three_count)};
+                TextView[] dayFour = new TextView[] {
+                        findViewById(R.id.day_four_label),
+                        findViewById(R.id.day_four_count)};
+                TextView[] dayFive = new TextView[] {
+                        findViewById(R.id.day_five_label),
+                        findViewById(R.id.day_five_count)};
+
+                TextView[][] week = new TextView[][]{ dayOne, dayTwo, dayThree, dayFour, dayFive };
+
+                for (int i = 0; i < week.length; ++i) {
+                    TextView[] day = week[i];
+                    day[0].setText(fiveDayForecast.getDaysOfWeek()[i]);
+
+                    int count = fiveDayForecast.getDayN(i).getHighestPollutant().getValue();
+                    day[1].setText(count+""); // count
+                }
+            }
+        });
     }
 
     private void updateAfterSymptomsComplete() {

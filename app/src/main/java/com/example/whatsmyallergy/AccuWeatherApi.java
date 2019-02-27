@@ -55,9 +55,7 @@ public class AccuWeatherApi extends AsyncTask<Void, Void, Void> {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 FiveDayForecast fiveDayForecast = globalState.getFiveDayForecast();
-                Day today = fiveDayForecast.getDayN(0);
-
-                updateTodayPollenCount(today);
+                updateTodayPollenCount();
 
                 TextView[] dayOne = new TextView[] {
                         ((MainActivity)context).findViewById(R.id.day_one_label),
@@ -88,23 +86,27 @@ public class AccuWeatherApi extends AsyncTask<Void, Void, Void> {
         });
     }
 
-    private void updateTodayPollenCount(Day today) {
-        Pollen highestPollen = today.getHighestPollutant();
+    private void updateTodayPollenCount() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                Pollen highestPollen = globalState.getFiveDayForecast().getDayN(0).getHighestPollutant();
 
-        TextView pollenValue = (TextView) ((MainActivity)context).findViewById(R.id.count_text);
-        pollenValue.setText(String.valueOf(highestPollen.getValue()));
+                TextView pollenValue = (TextView) ((MainActivity) context).findViewById(R.id.count_text);
+                pollenValue.setText(String.valueOf(highestPollen.getValue()));
 
-        TextView pollenCategory = (TextView) ((MainActivity)context).findViewById(R.id.severity_text);
-        pollenCategory.setText(highestPollen.getCategory());
+                TextView pollenCategory = (TextView) ((MainActivity) context).findViewById(R.id.severity_text);
+                pollenCategory.setText(highestPollen.getCategory());
 
-        TextView pollenName = (TextView) ((MainActivity)context).findViewById(R.id.name_text);
-        pollenName.setText(highestPollen.getName());
+                TextView pollenName = (TextView) ((MainActivity) context).findViewById(R.id.name_text);
+                pollenName.setText(highestPollen.getName());
 
-        TextView locationText = (TextView) ((MainActivity)context).findViewById(R.id.location_text);
-        locationText.setText(globalState.getLocationName());
+                TextView locationText = (TextView) ((MainActivity) context).findViewById(R.id.location_text);
+                locationText.setText(globalState.getLocationName());
 
-        TextView severityText = (TextView) ((MainActivity)context).findViewById(R.id.severity_text);
-        severityText.setText(highestPollen.getSeverity());
+                TextView severityText = (TextView) ((MainActivity) context).findViewById(R.id.severity_text);
+                severityText.setText(highestPollen.getSeverity());
+            }
+        });
     }
 
     private void processLocationKey(String json) {

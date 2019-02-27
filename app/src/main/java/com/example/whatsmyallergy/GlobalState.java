@@ -18,7 +18,7 @@ public class GlobalState extends Application {
 
     public GlobalState() {
         locationSet = false;
-        postalCode = "92612";
+        postalCode = "92506";
     }
 
     public boolean checkDailySymptomsComplete() {
