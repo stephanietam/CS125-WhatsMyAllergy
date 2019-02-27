@@ -6,15 +6,15 @@ import java.util.HashMap;
 
 public class Day {
     private Date date;
-    private HashMap<String, Pollutants> pollens;
+    private HashMap<String, Pollen> pollens;
 
-    public Day(Date date, ArrayList<Pollutants> pollenList) {
+    public Day(Date date, ArrayList<Pollen> pollenList) {
         pollens = new HashMap<>();
 
         this.date = date;
 
         for (int i = 0; i < pollenList.size(); ++i) {
-            pollens.put(pollenList.get(i).getName(), new Pollutants(pollenList.get(i)));
+            pollens.put(pollenList.get(i).getName(), new Pollen(pollenList.get(i)));
         }
     }
 
@@ -22,10 +22,10 @@ public class Day {
         return date.getDay();
     }
 
-    public Pollutants getHighestPollutant() {
-        Pollutants highest = pollens.get("Grass");
+    public Pollen getHighestPollutant() {
+        Pollen highest = pollens.get("Grass");
         int highestValue = 0;
-        for (Pollutants pollen: pollens.values()) {
+        for (Pollen pollen: pollens.values()) {
             if (pollen.getValue()>highestValue) {
                 highestValue = pollen.getValue();
                 highest = pollen;
@@ -34,7 +34,7 @@ public class Day {
         return highest;
     }
 
-    public HashMap<String, Pollutants> getPollens() {
+    public HashMap<String, Pollen> getPollens() {
         return pollens;
     }
 

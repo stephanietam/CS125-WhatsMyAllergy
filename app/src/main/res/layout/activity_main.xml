@@ -12,6 +12,8 @@
         android:layout_width="233dp"
         android:layout_height="32dp"
         android:layout_marginVertical="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:text="@string/today_text"
         android:textSize="24sp"
@@ -23,6 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:text="@string/forecast_5day"
         android:textSize="24sp"
@@ -47,7 +51,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/sample_location"
             android:textAlignment="center"
-            android:textSize="18sp"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/pollen_img"
             app:layout_constraintTop_toTopOf="parent" />
@@ -56,9 +60,8 @@
             android:id="@+id/count_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:text="@string/sample_pollen_count"
@@ -74,12 +77,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/sample_severity"
+            android:text="@string/high_severity_text"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toEndOf="@+id/pollen_img"
-            app:layout_constraintTop_toBottomOf="@+id/name_text" />
+            app:layout_constraintTop_toBottomOf="@+id/name_text"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/pollen_img"
@@ -101,9 +106,9 @@
             android:id="@+id/name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="68dp"
-            android:layout_marginRight="68dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="72dp"
+            android:layout_marginRight="72dp"
             android:text="@string/sample_category"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -241,7 +246,7 @@
                     app:srcCompat="@mipmap/ic_launcher_round" />
 
                 <TextView
-                    android:id="@+id/day_three"
+                    android:id="@+id/day_three_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/sample_pollen_count"
@@ -372,7 +377,7 @@
             android:id="@+id/symptoms_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/large_text"
+            android:text="@string/suggestion_text"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="0dp" />
     </ScrollView>

@@ -1,6 +1,7 @@
 package com.example.whatsmyallergy;
 
 import android.app.Application;
+import android.util.Log;
 
 public class GlobalState extends Application {
     private boolean daily_symptoms_complete;
@@ -9,12 +10,15 @@ public class GlobalState extends Application {
 
     private boolean locationSet;
 
+    private String postalCode;
+
     private FiveDayForecast fiveDayForecast;
 
-    private String location;
+    private String locationName;
 
     public GlobalState() {
         locationSet = false;
+        postalCode = "92612";
     }
 
     public boolean checkDailySymptomsComplete() {
@@ -41,12 +45,12 @@ public class GlobalState extends Application {
         return apiLocationKey;
     }
 
-    public void setLocationString(String location) {
-        this.location = location;
+    public void setLocationName(String location) {
+        this.locationName = location;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationName() {
+        return locationName;
     }
 
     public void setFiveDayForecast(FiveDayForecast fiveDayForecast) {
@@ -55,5 +59,24 @@ public class GlobalState extends Application {
 
     public FiveDayForecast getFiveDayForecast() {
         return fiveDayForecast;
+    }
+
+    public String getPostalCodeRequest() {
+        String url = getResources().getString(R.string.accu_postalCodeApiURL);
+        String apiKey = getResources().getString(R.string.accu_apikey);
+
+        String requestURL = url+"?apikey="+apiKey+"&q="+postalCode;
+        Log.d("Print", "PostalCode GET request URL: " + requestURL);
+        return requestURL;
+    }
+
+    public String getForecastRequest() {
+        String weatherAPI = getResources().getString(R.string.accu_5dayApiURL);
+        String apiKey = getResources().getString(R.string.accu_apikey);
+
+        String requestURL = weatherAPI+apiLocationKey+"?apikey="+apiKey+"&details=true";
+        Log.d("Print", "Forecast request URL: " + requestURL);
+
+        return requestURL;
     }
 }

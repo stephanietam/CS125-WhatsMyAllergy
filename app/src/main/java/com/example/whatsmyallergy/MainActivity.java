@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -70,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Getting location key
         if (!globalState.checkLocationIsSet()) { // OR location is different
-            setLocationKey();
-            setPollenCount(); //processForecastFromFile("sample_weather_response.json");
+            AsyncTask asyncTask = new AccuWeatherApi(this).execute();
         }
 
         // Waiting for symptoms button click
@@ -107,32 +105,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setLocationKey() {
-        String citySearchURL = getResources().getString(R.string.accu_citySearchApiURL);
-        String apiKey = getResources().getString(R.string.accu_apikey);
-        String locationString = getResources().getString(R.string.sample_location);
-
-        String requestURL = citySearchURL+"?apikey="+apiKey+"&q="+locationString;
-        Log.d("Print", "CitySearch GET request URL: " + requestURL);
-
-        AsyncTask asyncTask = new CitySearchApi().execute(requestURL);
-    }
-
-    private void setPollenCount() {
-        String weatherAPI = getResources().getString(R.string.accu_5dayApiURL);
-        String apiKey = getResources().getString(R.string.accu_apikey);
-        String locationApi = globalState.getApiLocationKey();
-
-        String requestURL = weatherAPI+"337095"+"?apikey="+apiKey+"&details=true";
-        Log.d("Print", "weather request URL: " + requestURL);
-
-        AsyncTask asyncTask = new ForecastApi(this).execute(requestURL);
-    }
-
-    public static void processLocationKey(String locationKey) {
-        globalState.setApiLocationKey(locationKey);
-    }
-
     @TargetApi(Build.VERSION_CODES.O)
     private void processForecastFromFile(String path) {
         String json = "";
@@ -157,11 +129,11 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < dailyForecastsJSON.length(); ++i) {
                 JSONArray pollens = dailyForecastsJSON.getJSONObject(i).getJSONArray("AirAndPollen");
 
-                ArrayList<Pollutants> pollenList = new ArrayList<>();
+                ArrayList<Pollen> pollenList = new ArrayList<>();
                 for (int j = 0; j < pollens.length(); ++j) {
                     JSONObject pollen = pollens.getJSONObject(j);
 //                    Log.d("Print",pollen.toString());
-                    pollenList.add(new Pollutants(pollen.getString("Name"),
+                    pollenList.add(new Pollen(pollen.getString("Name"),
                                                 Integer.parseInt(pollen.getString("Value")),
                                                 pollen.getString("Category"),
                                                 pollen.getString("CategoryValue")));
@@ -185,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            globalState.setLocationString("San Francisco, CA");
+            globalState.setLocationName("San Francisco, CA");
             FiveDayForecast fiveDayForecast = new FiveDayForecast(fiveDays);
             globalState.setFiveDayForecast(fiveDayForecast);
             ///
@@ -195,15 +167,4 @@ public class MainActivity extends AppCompatActivity {
 
         FiveDayForecast s = globalState.getFiveDayForecast();
     }
-
-
-    public static void setLocationString(String location) {
-        globalState.setLocationString(location);
-        globalState.locationSet(true);
-    }
-
-    public static void setFiveDayForecast(FiveDayForecast fdf) {
-        globalState.setFiveDayForecast(fdf);
-    }
-
 }
