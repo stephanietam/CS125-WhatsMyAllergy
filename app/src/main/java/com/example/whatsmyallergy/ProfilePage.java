@@ -7,6 +7,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class ProfilePage extends AppCompatActivity {
 
@@ -50,6 +54,19 @@ public class ProfilePage extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         MenuItem menuItem = navigation.getMenu().getItem(1);
         menuItem.setChecked(true);
+
+        ListView knownAllergy = findViewById(R.id.allergyListView);
+        String[] values = new String[] { "Ragweed", "Mold", "Pets",
+                        "Grass"};
+
+        final ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < values.length; ++i) {
+            list.add(values[i]);
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+        knownAllergy.setAdapter(adapter);
+        ListView familyHistory = findViewById(R.id.familyHistoryListView);
+        familyHistory.setAdapter(adapter);
     }
 
 }
