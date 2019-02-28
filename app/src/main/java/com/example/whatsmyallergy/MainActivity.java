@@ -70,11 +70,11 @@ public class MainActivity extends AppCompatActivity {
         updateAfterSymptomsComplete();
 
         // Getting location key
-/*        if (!globalState.checkLocationIsSet()) { // OR location is different
+        if (!globalState.checkLocationIsSet()) { // OR location is different
             AsyncTask asyncTask = new AccuWeatherApi(this).execute();
         } else {
             setTextViews();
-        }*/
+        }
 
         // Waiting for symptoms button click
         Button symptoms_button = (Button) findViewById(R.id.symptoms_button);

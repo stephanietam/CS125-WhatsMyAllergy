@@ -42,7 +42,6 @@ public class AccuWeatherApi extends AsyncTask<Void, Void, Void> {
             JSONObject jsonObject = new JSONObject(forecastResponse);
             JSONArray dailyForecastsJSON = jsonObject.getJSONArray("DailyForecasts");
             processForecast(dailyForecastsJSON);
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;
