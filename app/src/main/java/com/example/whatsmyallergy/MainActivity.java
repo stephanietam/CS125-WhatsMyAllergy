@@ -65,13 +65,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Home");
 
         globalState = (GlobalState)getApplication();
         updateAfterSymptomsComplete();
 
         // Getting location key
         if (!globalState.checkLocationIsSet()) { // OR location is different
-            AsyncTask asyncTask = new AccuWeatherApi(this).execute();
+//            AsyncTask asyncTask = new AccuWeatherApi(this).execute();
         } else {
             setTextViews();
         }
