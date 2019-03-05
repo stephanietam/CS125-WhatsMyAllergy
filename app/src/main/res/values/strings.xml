@@ -41,6 +41,6 @@
     <string name="title_activity_settings_page_enable">Enable</string>
     <string name="title_activity_settings_page_disable">Disable</string>
     <string name="title_activity_settings_page_notifications">Notifications</string>
-
+    <string name="symptomName_runnyNose">Runny Nose</string>
 
 </resources>

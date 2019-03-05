@@ -59,78 +59,90 @@
                 android:textSize="20dp" />
 
             <CheckBox
-                android:id="@+id/checkBox5"
+                android:id="@+id/Symptom_runnyNose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Runny nose " />
+                android:text="Runny Nose"
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox6"
+                android:id="@+id/Symptom_wateryEyes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Watery eyes " />
+                android:text="Watery eyes "
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox7"
+                android:id="@+id/Symptom_sneezing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sneezing" />
+                android:text="Sneezing"
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox10"
+                android:id="@+id/Symptom_coughing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Coughing" />
+                android:text="Coughing"
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox14"
+                android:id="@+id/Symptom_itchyEyesAndNose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Itchy eyes and nose" />
+                android:text="Itchy eyes and nose"
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox15"
+                android:id="@+id/Symptom_darkCircles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Dark circles under eyes " />
+                android:text="Dark circles under eyes "
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox16"
+                android:id="@+id/Symptom_inflamedNasal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Inflamed nasal passages" />
+                android:text="Inflamed nasal passages"
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox17"
+                android:id="@+id/Symptom_itchyThroat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Itchy throat and mouth " />
+                android:text="Itchy throat and mouth "
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox20"
+                android:id="@+id/Symptom_skinReactions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Skin reactions " />
+                android:text="Skin reactions "
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox18"
+                android:id="@+id/Symptom_earPressure"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ear pressure" />
+                android:text="Ear pressure"
+                android:onClick="selectSymptom"/>
 
             <CheckBox
-                android:id="@+id/checkBox19"
+                android:id="@+id/Symptom_fatigue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Fatigue " />
+                android:text="Fatigue "
+                android:onClick="selectSymptom"/>
 
             <Button
-                android:id="@+id/Submit_button"
+                android:id="@+id/calendar_submit_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
                 android:clickable="true"
                 android:paddingTop="5dp"
+                android:onClick="onSubmitClicked"
                 android:text="Submit" />
 
         </LinearLayout>
