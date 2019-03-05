@@ -25,10 +25,6 @@ public class CalendarPage extends AppCompatActivity {
     //ArrayList<String> daySymptoms = new ArrayList<String>();
     Map<String, Integer> symptomMap = new HashMap<>();
 
-    private int mDay;
-    private int mMonth;
-    private int mYear;
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -64,9 +60,17 @@ public class CalendarPage extends AppCompatActivity {
 
         //initialize symptoms
         //symptomMap.put("Date",)
-        symptomMap.put("Runny Nose",0);
-        symptomMap.put("Watery Eyes",0);
-        symptomMap.put("Sneezing",0);
+
+        String currentDate = new SimpleDateFormat("MM/dd/yyyy").format(Calendar.getInstance().getTime());
+        String currentDateArr [] = currentDate.split("/");
+        System.out.println("Elements of Date Array: "+currentDateArr);
+        //String currentMonth = currentDateArr[0];
+        //String currentDay = currentDateArr[1];
+
+        //String currentYear = currentDateArr[2];
+        System.out.println("Current Date : " + currentDate);
+
+        //!!!need to convert string to int!!!
 
         //Calendar
         symptomCalendar = (CalendarView)findViewById(R.id.calendarView);
@@ -74,10 +78,20 @@ public class CalendarPage extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 String date = month+1 + "/" + dayOfMonth + "/" + year;
-                System.out.println(date);
+                System.out.println("Selected Date : " + date);
                 //if selected date < current date display the checkbox values for that date key
-
                 //else init hashmap and add symptoms for that date key
+                symptomMap.put("Runny Nose",0);
+                symptomMap.put("Watery Eyes",0);
+                symptomMap.put("Sneezing",0);
+                symptomMap.put("Coughing",0);
+                symptomMap.put("Itchy eyes and nose",0);
+                symptomMap.put("Dark circles",0);
+                symptomMap.put("Inflamed nasal passage",0);
+                symptomMap.put("Itchy throat and mouth",0);
+                symptomMap.put("Skin reactions",0);
+                symptomMap.put("Ear pressure",0);
+                symptomMap.put("Fatigue",0);
             }
         });
 
@@ -114,12 +128,60 @@ public class CalendarPage extends AppCompatActivity {
                     symptomMap.put("Sneezing",1);
                     ((CheckBox)view).setChecked(true);
                 }
+            case R.id.Symptom_coughing:
+                if(checked)
+                {
+                    symptomMap.put("Coughing",1);
+                    ((CheckBox)view).setChecked(true);
+                }
+            case R.id.Symptom_itchyEyesAndNose:
+                if(checked)
+                {
+                    symptomMap.put("Itchy eyes and nose",1);
+                    ((CheckBox)view).setChecked(true);
+                }
+            case R.id.Symptom_darkCircles:
+                if(checked)
+                {
+                    symptomMap.put("Dark circles",1);
+                    ((CheckBox)view).setChecked(true);
+                }
+            case R.id.Symptom_inflamedNasal:
+                if(checked)
+                {
+                    symptomMap.put("Inflamed nasal passage",1);
+                    ((CheckBox)view).setChecked(true);
+                }
+            case R.id.Symptom_itchyThroat:
+                if(checked)
+                {
+                    symptomMap.put("Itchy throat and mouth",1);
+                    ((CheckBox)view).setChecked(true);
+                }
+            case R.id.Symptom_skinReactions:
+                if(checked)
+                {
+                    symptomMap.put("Skin reactions",1);
+                    ((CheckBox)view).setChecked(true);
+                }
+            case R.id.Symptom_earPressure:
+                if(checked)
+                {
+                    symptomMap.put("Ear pressure",1);
+                    ((CheckBox)view).setChecked(true);
+                }
+            case R.id.Symptom_fatigue:
+                if(checked)
+                {
+                    symptomMap.put("Fatigue",1);
+                    ((CheckBox)view).setChecked(true);
+                }
         }
     }
 
     //Submit button clicked
     public void onSubmitClicked(View view) {
-        System.out.println("Elements of ArrayList of String Type: "+symptomMap);
+        System.out.println("Elements of ArrayList of String Type: " + symptomMap);
     }
 
 }
