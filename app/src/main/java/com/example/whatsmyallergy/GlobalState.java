@@ -4,6 +4,8 @@ import android.app.Application;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GlobalState extends Application {
     private boolean daily_symptoms_complete;
@@ -18,10 +20,10 @@ public class GlobalState extends Application {
 
     private String locationName;
 
-    private ArrayList<String> calendarEntries = new ArrayList<String>();
+    private Map<String, ArrayList<String>> calendarEntries = new HashMap<String, ArrayList<String>>();
 
-    public void addCalendarEntries(String entry) {
-        calendarEntries.add(entry);
+    public void addCalendarEntries(String key, ArrayList<String> entry) {
+        calendarEntries.put(key,entry);
     }
     public String calendarEntriesLength () {
         return (""+ calendarEntries.size());
