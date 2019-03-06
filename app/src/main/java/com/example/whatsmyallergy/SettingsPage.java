@@ -53,6 +53,8 @@ import org.json.JSONObject;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import static com.example.whatsmyallergy.MainActivity.globalState;
+
 /**
  * Using location settings.
  * <p/>
@@ -69,6 +71,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
  */
 public class SettingsPage extends AppCompatActivity {
 
+    //private GlobalState state = new GlobalState();
     private static final String TAG = SettingsPage.class.getSimpleName();
 
     /**
@@ -84,7 +87,7 @@ public class SettingsPage extends AppCompatActivity {
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 60000;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
@@ -438,6 +441,12 @@ public class SettingsPage extends AppCompatActivity {
 
             Log.d(TAG,(String.format(Locale.ENGLISH, "COORDINATES: %f,%f",
                     mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())));
+            globalState.setCurrentGlobalLocation((String.format(Locale.ENGLISH, "COORDINATES: %f,%f",
+                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())));
+            String update = (String.format(Locale.ENGLISH, "%f,%f",
+                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+            updateTextView(update);
+            //globalState.getCurrentGlobalLocation();
             //API here
             //https://samples.openweathermap.org/data/2.5/forecast?lat=35&lon=139&appid=b6907d289e10d714a6e88b30761fae22
 
@@ -451,6 +460,7 @@ public class SettingsPage extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
 
                             Log.d(TAG,"Response: " + response.toString());
+
                             //addNotification();
                         }
                     }, new  com.android.volley.Response.ErrorListener() {
@@ -544,6 +554,10 @@ public class SettingsPage extends AppCompatActivity {
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
+    public void updateTextView(String toThis) {
+        TextView textViewUpdate = (TextView) findViewById(R.id.currentLocationValue);
+        textViewUpdate.setText(toThis);
+    }
 
     private void requestPermissions() {
         boolean shouldProvideRationale =

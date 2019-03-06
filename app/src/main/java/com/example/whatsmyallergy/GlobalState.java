@@ -22,11 +22,16 @@ public class GlobalState extends Application {
 
     private ArrayList<String> todaySymptoms;
 
+    private String currentGlobalLocation;
+
     public GlobalState() {
         locationSet = false;
         postalCode = "92506";
         currentSeason = "winter";
         todaySymptoms = new ArrayList<>();
+
+        //settings --> location
+        currentGlobalLocation= "0,0";
 
         // Sample symptoms
         todaySymptoms.add("watery_eyes");
@@ -34,6 +39,14 @@ public class GlobalState extends Application {
         todaySymptoms.add("coughing");
         todaySymptoms.add("fatigue");
         todaySymptoms.add("itchy_throat");
+    }
+
+    public String getCurrentGlobalLocation() {
+        return ("GLOBAL STATE: " + currentGlobalLocation);
+    }
+
+    public void setCurrentGlobalLocation(String someVariable) {
+        this.currentGlobalLocation = someVariable;
     }
 
     public boolean checkDailySymptomsComplete() {
