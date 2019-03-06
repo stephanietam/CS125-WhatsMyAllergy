@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+import static com.example.whatsmyallergy.MainActivity.globalState;
+
 
 public class CalendarPage extends AppCompatActivity {
 
@@ -181,6 +183,9 @@ public class CalendarPage extends AppCompatActivity {
 
     //Submit button clicked
     public void onSubmitClicked(View view) {
+        globalState.addCalendarEntries(""+symptomMap);
+        TextView update = (TextView) findViewById(R.id.calendarEntryCount);
+        update.setText(globalState.calendarEntriesLength ());
         System.out.println("Elements of ArrayList of String Type: " + symptomMap);
     }
 

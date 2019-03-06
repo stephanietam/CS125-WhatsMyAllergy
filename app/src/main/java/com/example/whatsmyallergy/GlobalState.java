@@ -3,6 +3,8 @@ package com.example.whatsmyallergy;
 import android.app.Application;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class GlobalState extends Application {
     private boolean daily_symptoms_complete;
 
@@ -15,6 +17,15 @@ public class GlobalState extends Application {
     private FiveDayForecast fiveDayForecast;
 
     private String locationName;
+
+    private ArrayList<String> calendarEntries = new ArrayList<String>();
+
+    public void addCalendarEntries(String entry) {
+        calendarEntries.add(entry);
+    }
+    public String calendarEntriesLength () {
+        return (""+ calendarEntries.size());
+    }
 
     public GlobalState() {
         locationSet = false;
