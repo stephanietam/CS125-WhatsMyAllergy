@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -38,9 +39,7 @@ public class SignupActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
+        final DatabaseReference myRef = database.getReference("Users");
 
         btnSignIn = (Button) findViewById(R.id.sign_in_button);
         btnSignUp = (Button) findViewById(R.id.sign_up_button);
@@ -100,6 +99,9 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
+                                    System.out.println(task.getResult().getUser().getEmail());
+                                    Users user = new Users(task.getResult().getUser().getUid(),task.getResult().getUser().getEmail());
+                                    myRef.child(task.getResult().getUser().getUid()).setValue(user);
                                     startActivity(new Intent(SignupActivity.this, MainActivity.class));
                                     finish();
                                 }
