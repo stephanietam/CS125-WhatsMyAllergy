@@ -1,37 +1,22 @@
 package com.example.whatsmyallergy;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     static GlobalState globalState;
+    private Suggestions suggestions;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -68,7 +53,13 @@ public class MainActivity extends AppCompatActivity {
         setTitle("Home");
 
         globalState = (GlobalState)getApplication();
-        updateAfterSymptomsComplete();
+
+
+        if (globalState.checkDailySymptomsComplete()) {
+            suggestions = new Suggestions(this);
+            setSuggestionsView();
+            updateAfterSymptomsComplete();
+        }
 
         // Getting location key
         if (!globalState.checkLocationIsSet()) { // OR location is different
@@ -91,6 +82,20 @@ public class MainActivity extends AppCompatActivity {
         // Bottom Navigation
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    private void setSuggestionsView() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                TextView suggestionsView = findViewById(R.id.symptoms_text);
+                String suggestionText = "";
+                ArrayList<String> suggestionsList = suggestions.getCurrentDaySuggestions();
+                for (int i = 0; i < suggestionsList.size(); ++i) {
+                    suggestionText += suggestionsList.get(i) + "\n";
+                }
+                suggestionsView.setText(suggestionText);
+            }
+        });
     }
 
     private void setTextViews() {
@@ -159,69 +164,6 @@ public class MainActivity extends AppCompatActivity {
             scroll_constraint.setVisibility(View.INVISIBLE);
             suggestion_title.setVisibility(View.INVISIBLE);
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.O)
-    private void processForecastFromFile(String path) {
-        String json = "";
-        try {
-
-            InputStream is = getAssets().open(path);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while ((line = reader.readLine()) != null)
-                json += line + "\n";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray dailyForecastsJSON = jsonObject.getJSONArray("DailyForecasts");
-
-            ArrayList<Day> fiveDays = new ArrayList<>();
-
-            /// PROCESS JSON
-            for (int i = 0; i < dailyForecastsJSON.length(); ++i) {
-                JSONArray pollens = dailyForecastsJSON.getJSONObject(i).getJSONArray("AirAndPollen");
-
-                ArrayList<Pollen> pollenList = new ArrayList<>();
-                for (int j = 0; j < pollens.length(); ++j) {
-                    JSONObject pollen = pollens.getJSONObject(j);
-//                    Log.d("Print",pollen.toString());
-                    pollenList.add(new Pollen(pollen.getString("Name"),
-                                                Integer.parseInt(pollen.getString("Value")),
-                                                pollen.getString("Category"),
-                                                pollen.getString("CategoryValue")));
-
-                }
-
-//                for (int j= 0; j < pollenList.size(); ++j) {
-//                    Log.d("Print", pollenList.get(j).getName());
-//                }
-
-
-                String dateString = dailyForecastsJSON.getJSONObject(i).getString("Date").substring(0,10);
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate localDate = LocalDate.parse(dateString, formatter);
-                Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//                Log.d("Print",date.toString());
-
-                Day day = new Day(date, pollenList);
-                fiveDays.add(day);
-
-            }
-
-            globalState.setLocationName("San Francisco, CA");
-            FiveDayForecast fiveDayForecast = new FiveDayForecast(fiveDays);
-            globalState.setFiveDayForecast(fiveDayForecast);
-            ///
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        FiveDayForecast s = globalState.getFiveDayForecast();
     }
 }
 

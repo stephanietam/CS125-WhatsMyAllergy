@@ -3,6 +3,8 @@ package com.example.whatsmyallergy;
 import android.app.Application;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class GlobalState extends Application {
     private boolean daily_symptoms_complete;
 
@@ -16,9 +18,22 @@ public class GlobalState extends Application {
 
     private String locationName;
 
+    private String currentSeason;
+
+    private ArrayList<String> todaySymptoms;
+
     public GlobalState() {
         locationSet = false;
         postalCode = "92506";
+        currentSeason = "winter";
+        todaySymptoms = new ArrayList<>();
+
+        // Sample symptoms
+        todaySymptoms.add("watery_eyes");
+        todaySymptoms.add("stuffy_nose");
+        todaySymptoms.add("coughing");
+        todaySymptoms.add("fatigue");
+        todaySymptoms.add("itchy_throat");
     }
 
     public boolean checkDailySymptomsComplete() {
@@ -78,5 +93,13 @@ public class GlobalState extends Application {
         Log.d("Print", "Forecast request URL: " + requestURL);
 
         return requestURL;
+    }
+
+    public String getCurrentSeason() {
+        return currentSeason;
+    }
+
+    public ArrayList<String> getTodaySymptoms() {
+        return todaySymptoms;
     }
 }
