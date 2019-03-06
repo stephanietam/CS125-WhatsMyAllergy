@@ -1,6 +1,9 @@
 package com.example.whatsmyallergy;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -12,7 +15,10 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     static GlobalState globalState;
@@ -53,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
         setTitle("Home");
 
         globalState = (GlobalState)getApplication();
+        double[] currentLatLong = globalState.getLatLong();
+        if (currentLatLong[0] != 0 && currentLatLong[1] != 0) {
+            setPostalCode();
+        }
 
 
         if (globalState.checkDailySymptomsComplete()) {
@@ -62,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Getting location key
-        if (!globalState.checkLocationIsSet()) { // OR location is different
+        String currentPostalCode = globalState.getPostalCode();
+        if (!globalState.checkLocationIsSet() ||
+                globalState.prevPostalCode!=currentPostalCode) { // OR location is different
+            globalState.prevPostalCode = globalState.getPostalCode();
 //            AsyncTask asyncTask = new AccuWeatherApi(this).execute();
         } else {
             setTextViews();
@@ -164,6 +177,21 @@ public class MainActivity extends AppCompatActivity {
             scroll_constraint.setVisibility(View.INVISIBLE);
             suggestion_title.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void setPostalCode() {
+        double[] latLong = globalState.getLatLong();
+        Geocoder gc = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = gc.getFromLocation(latLong[0],latLong[1],1);
+            if (addresses.size()>=1) {
+                String postalCode = addresses.get(0).getPostalCode();
+                globalState.setPostalCode(postalCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 

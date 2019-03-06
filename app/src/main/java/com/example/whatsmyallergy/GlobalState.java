@@ -1,6 +1,7 @@
 package com.example.whatsmyallergy;
 
 import android.app.Application;
+import android.location.Geocoder;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -22,16 +23,18 @@ public class GlobalState extends Application {
 
     private ArrayList<String> todaySymptoms;
 
-    private String currentGlobalLocation;
+    private double[] currentGlobalLocation;
+
+    public String prevPostalCode;
 
     public GlobalState() {
         locationSet = false;
-        postalCode = "92506";
+        postalCode = prevPostalCode = "92506";
         currentSeason = "winter";
         todaySymptoms = new ArrayList<>();
 
         //settings --> location
-        currentGlobalLocation= "0,0";
+        currentGlobalLocation = new double[] {0,0};
 
         // Sample symptoms
         todaySymptoms.add("watery_eyes");
@@ -45,8 +48,9 @@ public class GlobalState extends Application {
         return ("GLOBAL STATE: " + currentGlobalLocation);
     }
 
-    public void setCurrentGlobalLocation(String someVariable) {
-        this.currentGlobalLocation = someVariable;
+    public void setCurrentGlobalLocation(double lat, double lng) {
+        this.currentGlobalLocation[0] = lat;
+        this.currentGlobalLocation[1] = lng;
     }
 
     public boolean checkDailySymptomsComplete() {
@@ -114,5 +118,17 @@ public class GlobalState extends Application {
 
     public ArrayList<String> getTodaySymptoms() {
         return todaySymptoms;
+    }
+
+    public double[] getLatLong() {
+        return currentGlobalLocation;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
     }
 }

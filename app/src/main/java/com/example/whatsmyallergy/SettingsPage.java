@@ -439,10 +439,10 @@ public class SettingsPage extends AppCompatActivity {
     private void updateLocationUI() {
         if (mCurrentLocation != null) {
 
-            Log.d(TAG,(String.format(Locale.ENGLISH, "COORDINATES: %f,%f",
+            Log.d(TAG,(String.format(Locale.ENGLISH, "%f,%f",
                     mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())));
-            globalState.setCurrentGlobalLocation((String.format(Locale.ENGLISH, "COORDINATES: %f,%f",
-                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())));
+            globalState.setCurrentGlobalLocation(mCurrentLocation.getLatitude(),
+                    mCurrentLocation.getLongitude());
             String update = (String.format(Locale.ENGLISH, "%f,%f",
                     mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
             updateTextView(update);
