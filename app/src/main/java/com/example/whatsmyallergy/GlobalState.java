@@ -22,9 +22,11 @@ public class GlobalState extends Application {
 
     private Map<String, ArrayList<String>> calendarEntries = new HashMap<String, ArrayList<String>>();
 
-    public void addCalendarEntries(String key, ArrayList<String> entry) {
-        calendarEntries.put(key,entry);
+    public Map<String, ArrayList<String>> getCalendarEntries(Map<String, ArrayList<String>> entry)
+    {
+        return entry;
     }
+
     public String calendarEntriesLength () {
         return (""+ calendarEntries.size());
     }
