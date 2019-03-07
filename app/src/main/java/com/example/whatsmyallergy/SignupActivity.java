@@ -90,7 +90,6 @@ public class SignupActivity extends AppCompatActivity {
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(SignupActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
@@ -102,7 +101,9 @@ public class SignupActivity extends AppCompatActivity {
                                     System.out.println(task.getResult().getUser().getEmail());
                                     Users user = new Users(task.getResult().getUser().getUid(),task.getResult().getUser().getEmail());
                                     myRef.child(task.getResult().getUser().getUid()).setValue(user);
-                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                                    Intent intent = new Intent(SignupActivity.this, AccountInfo.class);
+                                    intent.putExtra("uid", task.getResult().getUser().getUid());
+                                    startActivity(intent);
                                     finish();
                                 }
                             }
