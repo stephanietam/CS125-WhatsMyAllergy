@@ -29,14 +29,16 @@ public class GlobalState extends Application {
 
     public GlobalState() {
         locationSet = false;
-        postalCode = prevPostalCode = "92506";
-        currentSeason = "winter";
-        todaySymptoms = new ArrayList<>();
+        currentSeason = "winter"; // TO DO: program this according to current time
+
+        postalCode = prevPostalCode = "92506"; // postalCode should be taken from profile
+        // prevPostalCode is to look for new change in location
 
         //settings --> location
-        currentGlobalLocation = new double[] {0,0};
+        currentGlobalLocation = new double[] {0,0}; // TO DO: Should be taken from profile
 
-        // Sample symptoms
+        // Sample symptoms -- Should be taken from profile
+        todaySymptoms = new ArrayList<>();
         todaySymptoms.add("watery_eyes");
         todaySymptoms.add("stuffy_nose");
         todaySymptoms.add("coughing");
@@ -91,6 +93,10 @@ public class GlobalState extends Application {
 
     public FiveDayForecast getFiveDayForecast() {
         return fiveDayForecast;
+    }
+
+    public int getTodayPollenCount() {
+        return fiveDayForecast.getDayN(0).getHighestPollutant().getValue();
     }
 
     public String getPostalCodeRequest() {

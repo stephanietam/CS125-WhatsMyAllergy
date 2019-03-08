@@ -15,6 +15,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import static com.example.whatsmyallergy.MainActivity.globalState;
+
 public class MapPage extends AppCompatActivity implements OnMapReadyCallback {
 
     private TextView mTextMessage;
@@ -66,11 +68,16 @@ public class MapPage extends AppCompatActivity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        // Add a marker in Sydney, Australia,
+        // Add a marker
         // and move the map's camera to the same location.
-        LatLng sydney = new LatLng(-33.852, 151.211);
-        googleMap.addMarker(new MarkerOptions().position(sydney)
-                .title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        double[] latlng = globalState.getLatLong();  // TO DO: latlng should be set to profile postalcode location
+        LatLng location = new LatLng(latlng[0], latlng[1]);
+        String todayPollenCount = "0";
+        // Uncomment below if Async in MainActivity was uncommented
+//        String todayPollenCount = String.valueOf(globalState.getTodayPollenCount());
+
+        googleMap.addMarker(new MarkerOptions().position(location).title(todayPollenCount));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        googleMap.setMinZoomPreference(15);
     }
 }
