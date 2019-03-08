@@ -15,11 +15,10 @@ import android.widget.CalendarView;
 import java.util.Calendar;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.List;
 import java.util.Arrays;
-import java.util.Date;
-import android.app.Activity;
+import android.widget.LinearLayout;
 import java.text.SimpleDateFormat;
-import android.content.SharedPreferences;
 import static com.example.whatsmyallergy.MainActivity.globalState;
 
 
@@ -29,7 +28,6 @@ public class CalendarPage extends AppCompatActivity {
     private TextView mTextMessage;
     String currentDate;
     String date;
-    //ArrayList<String> daySymptoms;
     ArrayList<String> daySymptoms = new ArrayList<String>();
     Map<String, ArrayList<String>> symptomMap = new HashMap<String, ArrayList<String>>();
     String[] selectedDateArr;
@@ -39,6 +37,7 @@ public class CalendarPage extends AppCompatActivity {
     int selectedMonth;
     int selectedDay;
     boolean olderDateSelected = false;
+    List<String> symptomList = new ArrayList<>(Arrays.asList("Runny nose", "Watery eyes","Sneezing","Coughing","Itchy eyes and nose","Dark circles","Inflamed nasal passage","Itchy throat and mouth","Skin reactions","Ear pressure","Fatigue"));
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -87,7 +86,6 @@ public class CalendarPage extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 daySymptoms = new ArrayList<String>();
-
                 date = month+1 + "/" + dayOfMonth + "/" + year;
                 System.out.println("Selected Date : " + date);
 
@@ -104,26 +102,65 @@ public class CalendarPage extends AppCompatActivity {
                 //prints out dates
                 System.out.println(Arrays.toString(currentDateArr));
                 System.out.println(Arrays.toString(selectedDateArr));
-//              System.out.println("Current Month = " + currentMonth);
-//              System.out.println("Current Day = " + currentDay);
 
                 Button submitButton=(Button)findViewById(R.id.calendar_submit_button);
-                //if date clicked on is in the past hide button
-                if(selectedMonth > currentMonth || selectedMonth == currentMonth && selectedDay > currentDay)
+
+                LinearLayout layout = (LinearLayout)findViewById(R.id.checkboxLayout);
+                for (int i = 0; i < layout.getChildCount(); i++) {
+                    View v = layout.getChildAt(i);
+                    if (v instanceof CheckBox) {
+                        ((CheckBox) v).setChecked(false);
+                        //System.out.println(""((CheckBox) v).getText());
+                    }
+                }
+
+                //if date clicked on is in the past
+                if(selectedMonth > currentMonth || selectedMonth == currentMonth && selectedDay >= currentDay)
                 {
                     olderDateSelected = true;
-                    if (submitButton.getVisibility()==View.VISIBLE){
-                        submitButton.setVisibility(View.GONE);
+                    ArrayList<String> checkedSymptoms = symptomMap.get(date);
+                    List<CheckBox> chosenSymptoms= new ArrayList<CheckBox>();
+
+                    if(checkedSymptoms != null)
+                    {
+                        //check all boxes that were selected for an older day
+                        for (int i = 0; i < layout.getChildCount(); i++) {
+                            View v = layout.getChildAt(i);
+                            if (v instanceof CheckBox) {
+                                for(String symptom : symptomList)
+                                {
+                                    if((checkedSymptoms.contains(symptom)) && ((((CheckBox) v).getText()).equals(symptom)))
+                                    {
+                                        chosenSymptoms.add((CheckBox)v);
+                                        ((CheckBox)v).setChecked(true);
+                                    }
+                                }
+                            }
+                        }
                     }
-                    System.out.println("Older day selected!");
+                    else
+                    {
+                        System.out.println("Symptom List is empty");
+                    }
+                    //edit button text Submit -> Edit
+                    submitButton.setText("Edit");
+                    //if (submitButton.getVisibility()==View.VISIBLE){
+//                        submitButton.setVisibility(View.GONE);
+//                    }
                 }
                 else
                 {
                     olderDateSelected = false;
-                    submitButton.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < layout.getChildCount(); i++) {
+                        View v = layout.getChildAt(i);
+                        if (v instanceof CheckBox) {
+                            ((CheckBox) v).setChecked(false);
+                        }
+                    }
+                    submitButton.setText("Submit");
+                    //submitButton.setVisibility(View.VISIBLE);
 
                 }
-                //else init hashmap and add symptoms for that date key
             }
         });
 
@@ -143,7 +180,7 @@ public class CalendarPage extends AppCompatActivity {
             case R.id.Symptom_runnyNose:
                 if(checked)
                 {
-                    daySymptoms.add("Runny Nose");
+                    daySymptoms.add("Runny nose");
                     if(olderDateSelected == true)
                     {
                         ((CheckBox)view).setChecked(true);
@@ -152,8 +189,8 @@ public class CalendarPage extends AppCompatActivity {
 
                 else
                 {
-                    if(daySymptoms.contains("Runny Nose")) {
-                        daySymptoms.remove("Runny Nose");
+                    if(daySymptoms.contains("Runny nose")) {
+                        daySymptoms.remove("Runny nose");
                     }
                     ((CheckBox)view).setChecked(false);
                 }
@@ -161,7 +198,7 @@ public class CalendarPage extends AppCompatActivity {
             case R.id.Symptom_wateryEyes:
                 if(checked)
                 {
-                    daySymptoms.add("Watery Eyes");
+                    daySymptoms.add("Watery eyes");
                     if(olderDateSelected == true)
                     {
                         ((CheckBox)view).setChecked(true);
@@ -169,8 +206,8 @@ public class CalendarPage extends AppCompatActivity {
                 }
                 else
                 {
-                    if(daySymptoms.contains("Watery Eyes")) {
-                        daySymptoms.remove("Watery Eyes");
+                    if(daySymptoms.contains("Watery eyes")) {
+                        daySymptoms.remove("Watery eyes");
                     }
                     ((CheckBox)view).setChecked(false);
                 }
@@ -331,8 +368,8 @@ public class CalendarPage extends AppCompatActivity {
         }
         //System.out.println("Symptom List : " + daySymptoms);
         globalState.getCalendarEntries(symptomMap);
-        TextView update = (TextView) findViewById(R.id.calendarEntryCount);
-        update.setText(globalState.calendarEntriesLength ());
+        //TextView update = (TextView) findViewById(R.id.calendarEntryCount);
+        //update.setText(globalState.calendarEntriesLength ());
     }
 
     //Submit button clicked
@@ -354,3 +391,32 @@ public class CalendarPage extends AppCompatActivity {
 //                symptomMap.put("Skin reactions",0);
 //                symptomMap.put("Ear pressure",0);
 //                symptomMap.put("Fatigue",0);
+
+//iterate through symptoms
+
+//                        if(checkedSymptoms.contains("Watery Eyes"))
+//                        {
+//                            wateryEyesCheckbox.setChecked(true);
+//                        }
+//                        else if(checkedSymptoms.contains("Watery Eyes")==false)
+//                        {
+//                            wateryEyesCheckbox.setChecked(false);
+//                        }
+//                        if(checkedSymptoms.contains("Runny Nose"))
+//                        {
+//                            runnyNoseCheckbox.setChecked(true);
+//                        }
+//                        else if(checkedSymptoms.contains("Runny Nose")==false)
+//                        {
+//                            wateryEyesCheckbox.setChecked(false);
+//                        }
+
+//                                for(CheckBox c : chosenSymptoms)
+//                                {
+//                                    System.out.println("Chosen Symptom = " + ((CheckBox) v2).getText());
+//
+//                                    String a = (((CheckBox) v2).getText()).toString();
+//                                    String b = (c.getText()).toString();
+//
+//
+//                                }

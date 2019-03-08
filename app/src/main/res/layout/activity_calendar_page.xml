@@ -29,10 +29,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:fillViewport="true"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +42,7 @@
 
 
         <LinearLayout
+            android:id="@+id/checkboxLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -62,78 +65,78 @@
                 android:id="@+id/Symptom_runnyNose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Runny Nose"
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Runny nose" />
 
             <CheckBox
                 android:id="@+id/Symptom_wateryEyes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Watery eyes "
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Watery eyes" />
 
             <CheckBox
                 android:id="@+id/Symptom_sneezing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sneezing"
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Sneezing" />
 
             <CheckBox
                 android:id="@+id/Symptom_coughing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Coughing"
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Coughing" />
 
             <CheckBox
                 android:id="@+id/Symptom_itchyEyesAndNose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Itchy eyes and nose"
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Itchy eyes and nose" />
 
             <CheckBox
                 android:id="@+id/Symptom_darkCircles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Dark circles under eyes "
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Dark circles under eyes" />
 
             <CheckBox
                 android:id="@+id/Symptom_inflamedNasal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Inflamed nasal passages"
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Inflamed nasal passages" />
 
             <CheckBox
                 android:id="@+id/Symptom_itchyThroat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Itchy throat and mouth "
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Itchy throat and mouth" />
 
             <CheckBox
                 android:id="@+id/Symptom_skinReactions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Skin reactions "
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Skin reactions" />
 
             <CheckBox
                 android:id="@+id/Symptom_earPressure"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ear pressure"
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Ear pressure" />
 
             <CheckBox
                 android:id="@+id/Symptom_fatigue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Fatigue "
-                android:onClick="selectSymptom"/>
+                android:onClick="selectSymptom"
+                android:text="Fatigue" />
 
             <Button
                 android:id="@+id/calendar_submit_button"
@@ -141,8 +144,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
                 android:clickable="true"
-                android:paddingTop="5dp"
                 android:onClick="onSubmitClicked"
+                android:paddingTop="5dp"
                 android:text="Submit" />
 
         </LinearLayout>
@@ -161,15 +164,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="16dp" />
-
-    <TextView
-        android:id="@+id/calendarEntryCount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-         />
 
 </android.support.constraint.ConstraintLayout>
