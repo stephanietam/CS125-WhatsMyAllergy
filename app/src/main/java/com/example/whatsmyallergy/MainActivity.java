@@ -59,16 +59,23 @@ public class MainActivity extends AppCompatActivity {
         setTitle("Home");
 
         globalState = (GlobalState)getApplication();
+
         double[] currentLatLong = globalState.getLatLong();
+        // if latLong is set
+        // else set latlng based on postalcode
         if (currentLatLong[0] != 0 && currentLatLong[1] != 0) {
-            setPostalCode();
+            globalState.setPostalCode();
+        } else {
+            double[] latlng = findLatLng(globalState.getPostalCode());
+            globalState.setLatLong(latlng[0], latlng[1]);
         }
 
-
+        // check if the symptoms of the day are complete
+        // if so, then display suggestions instead of button
         if (globalState.checkDailySymptomsComplete()) {
             suggestions = new Suggestions(this);
             setSuggestionsView();
-            updateAfterSymptomsComplete();
+            updateAfterSymptomsComplete(); // removes button
         }
 
         // Getting location key
@@ -179,19 +186,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setPostalCode() {
-        double[] latLong = globalState.getLatLong();
+    private double[] findLatLng(String postalCode) {
+        double[] latlng = {0,0};
+
         Geocoder gc = new Geocoder(this, Locale.getDefault());
         try {
-            List<Address> addresses = gc.getFromLocation(latLong[0],latLong[1],1);
+            List<Address> addresses = gc.getFromLocationName("Irvine, CA", 10);
             if (addresses.size()>=1) {
-                String postalCode = addresses.get(0).getPostalCode();
-                globalState.setPostalCode(postalCode);
+                latlng[0] = addresses.get(0).getLatitude();
+                latlng[1] = addresses.get(0).getLongitude();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return latlng;
     }
 }
 

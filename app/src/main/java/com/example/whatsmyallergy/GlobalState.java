@@ -1,10 +1,15 @@
 package com.example.whatsmyallergy;
 
 import android.app.Application;
+import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class GlobalState extends Application {
     private boolean daily_symptoms_complete;
@@ -27,12 +32,16 @@ public class GlobalState extends Application {
 
     public String prevPostalCode;
 
+    public ArrayList<String[]> nearbyPostalCodes;
+
     public GlobalState() {
         locationSet = false;
-        currentSeason = "winter"; // TO DO: program this according to current time
+        currentSeason = setSeason();
 
         postalCode = prevPostalCode = "92506"; // postalCode should be taken from profile
         // prevPostalCode is to look for new change in location
+
+        nearbyPostalCodes = new ArrayList<String[]>(); // nearby areas to get pollen counts for the map
 
         //settings --> location
         currentGlobalLocation = new double[] {0,0}; // TO DO: Should be taken from profile
@@ -46,13 +55,16 @@ public class GlobalState extends Application {
         todaySymptoms.add("itchy_throat");
     }
 
-    public String getCurrentGlobalLocation() {
-        return ("GLOBAL STATE: " + currentGlobalLocation);
-    }
-
-    public void setCurrentGlobalLocation(double lat, double lng) {
-        this.currentGlobalLocation[0] = lat;
-        this.currentGlobalLocation[1] = lng;
+    public String setSeason() {
+        String seasons[] = {
+                "winter", "winter",
+                "spring", "spring", "spring",
+                "summer", "summer", "summer",
+                "fall", "fall", "fall",
+                "winter"
+        };
+        Date date = new Date();
+        return seasons[ date.getMonth() ];
     }
 
     public boolean checkDailySymptomsComplete() {
@@ -96,8 +108,24 @@ public class GlobalState extends Application {
     }
 
     public int getTodayPollenCount() {
-        return fiveDayForecast.getDayN(0).getHighestPollutant().getValue();
+        try {
+            return fiveDayForecast.getDayN(0).getHighestPollutant().getValue();
+        } catch (NullPointerException e) {
+            Log.d("Print", "fiveDayForecast is empty");
+        }
+        return 0;
     }
+
+    public String getCurrentSeason() {
+        return currentSeason;
+    }
+
+    public ArrayList<String> getTodaySymptoms() {
+        return todaySymptoms;
+    }
+
+
+    /* API */
 
     public String getPostalCodeRequest() {
         String url = getResources().getString(R.string.accu_postalCodeApiURL);
@@ -118,17 +146,8 @@ public class GlobalState extends Application {
         return requestURL;
     }
 
-    public String getCurrentSeason() {
-        return currentSeason;
-    }
 
-    public ArrayList<String> getTodaySymptoms() {
-        return todaySymptoms;
-    }
-
-    public double[] getLatLong() {
-        return currentGlobalLocation;
-    }
+    /* Postal Code */
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
@@ -137,4 +156,41 @@ public class GlobalState extends Application {
     public String getPostalCode() {
         return postalCode;
     }
+
+    public String setPostalCode() {
+        String postalCode = getPostalCode();
+        double[] latLong = getLatLong();
+        Geocoder gc = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = gc.getFromLocation(latLong[0],latLong[1],1);
+            if (addresses.size()>=1) {
+                postalCode = addresses.get(0).getPostalCode();
+                setPostalCode(postalCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.postalCode = postalCode;
+        return postalCode;
+    }
+
+
+    /* Latitude and Longitude */
+
+    public void setCurrentGlobalLocation(double lat, double lng) {
+        this.currentGlobalLocation[0] = lat;
+        this.currentGlobalLocation[1] = lng;
+        setPostalCode();
+    }
+
+    public double[] getLatLong() {
+        return currentGlobalLocation;
+    }
+
+    public void setLatLong(double lat, double lng) {
+        currentGlobalLocation[0] = lat;
+        currentGlobalLocation[1] = lng;
+    }
+
+
 }

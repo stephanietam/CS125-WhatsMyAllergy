@@ -1,6 +1,7 @@
 package com.example.whatsmyallergy;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -12,7 +13,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import static com.example.whatsmyallergy.MainActivity.globalState;
@@ -66,18 +69,25 @@ public class MapPage extends AppCompatActivity implements OnMapReadyCallback {
         menuItem.setChecked(true);
     }
 
+    /* https://developers.google.com/maps/documentation/android-sdk/map-with-marker */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker
         // and move the map's camera to the same location.
-        double[] latlng = globalState.getLatLong();  // TO DO: latlng should be set to profile postalcode location
+        double[] latlng = globalState.getLatLong();  // latlng should be set to profile postal code location initially
         LatLng location = new LatLng(latlng[0], latlng[1]);
-        String todayPollenCount = "0";
-        // Uncomment below if Async in MainActivity was uncommented
-//        String todayPollenCount = String.valueOf(globalState.getTodayPollenCount());
 
-        googleMap.addMarker(new MarkerOptions().position(location).title(todayPollenCount));
+        // Uncomment below if Async in MainActivity was uncommented
+         String todayPollenCount = String.valueOf(globalState.getTodayPollenCount());
+//        String todayPollenCount = "0";
+
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(location).title(todayPollenCount)); // marker for current location
+        marker.showInfoWindow();
+
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         googleMap.setMinZoomPreference(15);
+
+        // TO DO: Populate map with more markers using another API for nearby zip codes
+        AsyncTask asyncTask = new GeoNamesApi(googleMap).execute();
     }
 }

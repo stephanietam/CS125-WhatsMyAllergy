@@ -34,14 +34,14 @@ public class AccuWeatherApi extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         try {
             URL postalCodeRequest = new URL(globalState.getPostalCodeRequest()); // PostalCode Api
-            String response = getRequestResponse(postalCodeRequest);
-            processLocationKey(getLocationJSON(response));
+//            String response = getRequestResponse(postalCodeRequest);
+//            processLocationKey(getLocationJSON(response));
 
             URL forecastRequest = new URL(globalState.getForecastRequest()); // Forecast Api
-            String forecastResponse = getRequestResponse(forecastRequest);
-            JSONObject jsonObject = new JSONObject(forecastResponse);
-            JSONArray dailyForecastsJSON = jsonObject.getJSONArray("DailyForecasts");
-            processForecast(dailyForecastsJSON);
+//            String forecastResponse = getRequestResponse(forecastRequest);
+//            JSONObject jsonObject = new JSONObject(forecastResponse);
+//            JSONArray dailyForecastsJSON = jsonObject.getJSONArray("DailyForecasts");
+//            processForecast(dailyForecastsJSON);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -76,10 +76,13 @@ public class AccuWeatherApi extends AsyncTask<Void, Void, Void> {
 
                 for (int i = 0; i < week.length; ++i) {
                     TextView[] day = week[i];
-                    day[0].setText(fiveDayForecast.getDaysOfWeek()[i]);
-
-                    int count = fiveDayForecast.getDayN(i).getHighestPollutant().getValue();
-                    day[1].setText(count+""); // count
+                    try {
+                        day[0].setText(fiveDayForecast.getDaysOfWeek()[i]);
+                        int count = fiveDayForecast.getDayN(i).getHighestPollutant().getValue();
+                        day[1].setText(count+""); // count
+                    } catch (NullPointerException e) {
+                        Log.d("Print", "API ran out of tries.");
+                    }
                 }
             }
         });
