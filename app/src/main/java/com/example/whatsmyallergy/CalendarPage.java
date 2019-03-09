@@ -144,7 +144,13 @@ public class CalendarPage extends AppCompatActivity {
                         System.out.println("Symptom List is empty");
                     }
                     //edit button text Submit -> Edit
-                    submitButton.setText("Edit");
+                    if(selectedDay == currentDay)
+                    {
+                        submitButton.setText("Submit");
+                    }
+                    else {
+                        submitButton.setText("Edit");
+                    }
                     //if (submitButton.getVisibility()==View.VISIBLE){
 //                        submitButton.setVisibility(View.GONE);
 //                    }
