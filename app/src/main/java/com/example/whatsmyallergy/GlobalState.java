@@ -1,8 +1,8 @@
 package com.example.whatsmyallergy;
 
 import android.app.Application;
+import android.location.Geocoder;
 import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +31,38 @@ public class GlobalState extends Application {
         return (""+ calendarEntries.size());
     }
 
+    private String currentSeason;
+
+    private ArrayList<String> todaySymptoms;
+
+    private double[] currentGlobalLocation;
+
+    public String prevPostalCode;
+
     public GlobalState() {
         locationSet = false;
-        postalCode = "92506";
+        postalCode = prevPostalCode = "92506";
+        currentSeason = "winter";
+        todaySymptoms = new ArrayList<>();
+
+        //settings --> location
+        currentGlobalLocation = new double[] {0,0};
+
+        // Sample symptoms
+        todaySymptoms.add("watery_eyes");
+        todaySymptoms.add("stuffy_nose");
+        todaySymptoms.add("coughing");
+        todaySymptoms.add("fatigue");
+        todaySymptoms.add("itchy_throat");
+    }
+
+    public String getCurrentGlobalLocation() {
+        return ("GLOBAL STATE: " + currentGlobalLocation);
+    }
+
+    public void setCurrentGlobalLocation(double lat, double lng) {
+        this.currentGlobalLocation[0] = lat;
+        this.currentGlobalLocation[1] = lng;
     }
 
     public boolean checkDailySymptomsComplete() {
@@ -93,5 +122,25 @@ public class GlobalState extends Application {
         Log.d("Print", "Forecast request URL: " + requestURL);
 
         return requestURL;
+    }
+
+    public String getCurrentSeason() {
+        return currentSeason;
+    }
+
+    public ArrayList<String> getTodaySymptoms() {
+        return todaySymptoms;
+    }
+
+    public double[] getLatLong() {
+        return currentGlobalLocation;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
     }
 }

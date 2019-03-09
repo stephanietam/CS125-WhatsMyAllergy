@@ -71,6 +71,7 @@ public class CalendarPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_page);
+        setTitle("Calendar");
 
         currentDate = new SimpleDateFormat("MM/dd/yyyy").format(Calendar.getInstance().getTime());
         System.out.println("Current Date : " + currentDate);
