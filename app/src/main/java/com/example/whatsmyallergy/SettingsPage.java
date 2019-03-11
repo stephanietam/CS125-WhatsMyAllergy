@@ -6,6 +6,11 @@ package com.example.whatsmyallergy;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.support.design.widget.BottomNavigationView;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -15,6 +20,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.design.widget.Snackbar;
 
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,6 +76,9 @@ import static com.example.whatsmyallergy.MainActivity.globalState;
  * (as specified in AndroidManifest.xml).
  */
 public class SettingsPage extends AppCompatActivity {
+
+    private NotificationUtils mNotificationUtils;
+    //NOTIFICATIONS
 
     //private GlobalState state = new GlobalState();
     private static final String TAG = SettingsPage.class.getSimpleName();
@@ -179,9 +188,9 @@ public class SettingsPage extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_settings_page);
 
+        mNotificationUtils = new NotificationUtils(this);
+        //NOTIFICATIONS^^^^^^
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_page);
@@ -241,6 +250,13 @@ public class SettingsPage extends AppCompatActivity {
             //updateUI();
         }
     }
+
+
+
+
+    ////
+
+    ////
 
     /**
      * Sets up the location request. Android has two location request settings:
@@ -423,6 +439,15 @@ public class SettingsPage extends AppCompatActivity {
             settingsEnableLocation.setVisibility(View.INVISIBLE);
             settingsDisableLocation.setVisibility(View.VISIBLE);
             Log.d(TAG,(String.format(Locale.ENGLISH, "Location ENABLED")));
+
+            //sendNotification(SettingsPage.this);
+
+            //SEND NOTIFICATION LIKE THIS
+            Notification.Builder nb = mNotificationUtils.
+                    getAndroidChannelNotification("HELLO", "By " + "NINA");
+
+            mNotificationUtils.getManager().notify(101, nb.build());
+            //
 
         } else {
             settingsEnableLocation.setEnabled(true);

@@ -137,7 +137,8 @@
         android:text="@string/title_activity_settings_page_enable"
         android:textColor="@android:color/background_light"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <Button
         android:id="@+id/settings_disableNotifications"
