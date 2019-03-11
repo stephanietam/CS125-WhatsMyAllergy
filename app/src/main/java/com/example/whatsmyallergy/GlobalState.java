@@ -4,6 +4,9 @@ import android.app.Application;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +26,17 @@ public class GlobalState extends Application {
     private FiveDayForecast fiveDayForecast;
 
     private String locationName;
+
+    private Map<String, ArrayList<String>> calendarEntries = new HashMap<String, ArrayList<String>>();
+
+    public Map<String, ArrayList<String>> getCalendarEntries(Map<String, ArrayList<String>> entry)
+    {
+        return entry;
+    }
+
+    public String calendarEntriesLength () {
+        return (""+ calendarEntries.size());
+    }
 
     private String currentSeason;
 
