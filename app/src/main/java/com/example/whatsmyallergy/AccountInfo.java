@@ -6,16 +6,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class AccountInfo extends AppCompatActivity {
 
+    private Bundle userBundle;
     private Button finishButton;
     private EditText editName, editDOB;
     private Switch petSwitch;
@@ -23,11 +28,14 @@ public class AccountInfo extends AppCompatActivity {
     boolean petBool;
     ArrayList<String> knownAllergenList;
     ArrayList<String> familyHistoryList;
-
     private CheckBox grassKA, treesKA, ragweedKA, moldKA, dustKA, petKA;
     private CheckBox grassFH, treesFH, ragweedFH, moldFH, dustFH, petFH;
     private ArrayList<CheckBox> allergenKA;
     private ArrayList<CheckBox> allergenFH;
+
+
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     private TextWatcher  textWatcher =new TextWatcher() {
         @Override
@@ -48,8 +56,7 @@ public class AccountInfo extends AppCompatActivity {
 
     private void checkComplete() {
         String userName = editName.getText().toString();
-        String userDOB = editName.getText().toString();
-        userName.replaceAll("[^A-Za-z0-9 ]", "");
+        String userDOB = editDOB.getText().toString();
         if (userName.equals("") || userDOB.equals("") || (userName.replaceAll("[^A-Za-z0-9 ]", "").length() == 0)) {
             finishButton.setEnabled(false);
         } else {
@@ -76,6 +83,7 @@ public class AccountInfo extends AppCompatActivity {
         dustFH = findViewById(R.id.dust_check_fh);
         petFH = findViewById(R.id.pet_check_fh);
     }
+
 
     private void addOnClicks()
     {
@@ -143,11 +151,22 @@ public class AccountInfo extends AppCompatActivity {
     }
 
 
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_info);
-        Intent i = getIntent();
-        String uid = i.getStringExtra("uid");
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("Users");
+
+
+        Intent intent = getIntent();
+        userBundle = intent.getExtras();
+
+
         allergenKA =  new ArrayList<>();
         allergenFH = new ArrayList<>();
         knownAllergenList = new ArrayList<>();
@@ -177,8 +196,9 @@ public class AccountInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 petBool = Boolean.valueOf(petStr);
-                System.out.println("KNOWN ALLERGEN LIST: " + knownAllergenList);
-                System.out.println("FAMILY ALLERGEN LIST: " + familyHistoryList);
+                String key = userBundle.getString("uid");
+                Users user = new Users(key, userBundle.getString("email"), editName.getText().toString(),editDOB.getText().toString(), petBool, knownAllergenList, familyHistoryList);
+                myRef.child(key).setValue(user);
                 startActivity(new Intent(AccountInfo.this, MainActivity.class));
             }
         });

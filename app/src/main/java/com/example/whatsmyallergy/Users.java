@@ -10,20 +10,17 @@ public class Users {
     String userDOB;
     boolean pets;
     ArrayList<String> knownAllergens;
+    ArrayList<String> familyHistory;
 
-    Users (String uid, String email)
+    Users (String uid, String email, String name, String DOB, boolean pets, ArrayList<String> ka, ArrayList<String> fh)
     {
-        this.userUID=uid;
-        this.userEmail=email;
-        this.pets = false;
-        this.knownAllergens = new ArrayList<>();
+        this.userUID = uid;
+        this.userEmail = email;
+        this.userName = name;
+        this.userDOB = DOB;
+        this.pets = pets;
+        this.knownAllergens = ka;
+        this.familyHistory = fh;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void setUserDOB(String userDOB) {
-        this.userDOB = userDOB;
-    }
 }
