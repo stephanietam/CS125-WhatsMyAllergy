@@ -138,6 +138,8 @@
         android:textColor="@android:color/background_light"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:onClick="startNotifications"
+
         />
 
     <Button
@@ -150,7 +152,8 @@
         android:text="@string/title_activity_settings_page_disable"
         android:textColor="@android:color/background_light"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="stopNotifications"/>
 
     <TextView
         android:id="@+id/currentLocationLabel"
