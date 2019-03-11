@@ -60,14 +60,11 @@ public class MainActivity extends AppCompatActivity {
 
         globalState = (GlobalState)getApplication();
 
-        double[] currentLatLong = globalState.getLatLong();
-        // if latLong is set
-        // else set latlng based on postalcode
-        if (currentLatLong[0] != 0 && currentLatLong[1] != 0) {
-            globalState.setPostalCode();
-        } else {
-            double[] latlng = findLatLng(globalState.getPostalCode());
-            globalState.setLatLong(latlng[0], latlng[1]);
+        double[] loc = globalState.getLatLong();
+        if (loc[0] == 0 && loc[1] == 0) {
+            String postalCode = globalState.getPostalCode();
+            double[] latlng = findLatLng(postalCode);
+            globalState.setCurrentGlobalLocation(latlng[0], latlng[1]);
         }
 
         // check if the symptoms of the day are complete
@@ -102,6 +99,23 @@ public class MainActivity extends AppCompatActivity {
         // Bottom Navigation
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    public double[] findLatLng(String postalCode) {
+        double[] latlng = {0,0};
+
+        Geocoder gc = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = gc.getFromLocationName(postalCode, 10);
+            if (addresses.size()>=1) {
+                latlng[0] = addresses.get(0).getLatitude();
+                latlng[1] = addresses.get(0).getLongitude();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return latlng;
     }
 
     private void setSuggestionsView() {
@@ -184,23 +198,6 @@ public class MainActivity extends AppCompatActivity {
             scroll_constraint.setVisibility(View.INVISIBLE);
             suggestion_title.setVisibility(View.INVISIBLE);
         }
-    }
-
-    private double[] findLatLng(String postalCode) {
-        double[] latlng = {0,0};
-
-        Geocoder gc = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> addresses = gc.getFromLocationName("Irvine, CA", 10);
-            if (addresses.size()>=1) {
-                latlng[0] = addresses.get(0).getLatitude();
-                latlng[1] = addresses.get(0).getLongitude();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return latlng;
     }
 }
 

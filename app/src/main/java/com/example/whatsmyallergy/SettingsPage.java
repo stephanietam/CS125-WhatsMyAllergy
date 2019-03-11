@@ -6,6 +6,8 @@ package com.example.whatsmyallergy;
 
 import android.Manifest;
 import android.app.Activity;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.design.widget.BottomNavigationView;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -38,8 +40,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -441,11 +445,22 @@ public class SettingsPage extends AppCompatActivity {
 
             Log.d(TAG,(String.format(Locale.ENGLISH, "%f,%f",
                     mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())));
-            globalState.setCurrentGlobalLocation(mCurrentLocation.getLatitude(),
-                    mCurrentLocation.getLongitude());
-            String update = (String.format(Locale.ENGLISH, "%f,%f",
-                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
-            updateTextView(update);
+
+            double[] latLng = {mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()};
+            double[] currentLatLng = globalState.getLatLong();
+            if ( latLng[0] != currentLatLng[0] && latLng[1] != currentLatLng[1] ) {
+                Log.d("Print","lat/lng update: " + currentLatLng[0] + " " + currentLatLng[1] +
+                                                            " to " + latLng[0] + " " + latLng[1]);
+                globalState.setCurrentGlobalLocation(mCurrentLocation.getLatitude(),
+                        mCurrentLocation.getLongitude());
+                // need to set postal code
+                globalState.setPostalCode(findPostalCode(latLng[0], latLng[1]));
+
+                String update = (String.format(Locale.ENGLISH, "%f,%f",
+                        mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+                updateTextView(update);
+            }
+
             //globalState.getCurrentGlobalLocation();
             //API here
             //https://samples.openweathermap.org/data/2.5/forecast?lat=35&lon=139&appid=b6907d289e10d714a6e88b30761fae22
@@ -476,6 +491,21 @@ public class SettingsPage extends AppCompatActivity {
 // Access the RequestQueue through your singleton class.
             MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
         }
+    }
+
+    public String findPostalCode(double lat, double lng) {
+        String postalCode = "";
+        Geocoder gc = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = gc.getFromLocation(lat,lng,1);
+            if (addresses.size()>=1) {
+                postalCode = addresses.get(0).getPostalCode();
+                globalState.setPostalCode(postalCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return postalCode==null ? globalState.getPostalCode() : postalCode;
     }
 
     /**

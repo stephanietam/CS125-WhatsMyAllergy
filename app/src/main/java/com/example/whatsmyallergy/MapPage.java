@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -77,17 +78,11 @@ public class MapPage extends AppCompatActivity implements OnMapReadyCallback {
         double[] latlng = globalState.getLatLong();  // latlng should be set to profile postal code location initially
         LatLng location = new LatLng(latlng[0], latlng[1]);
 
-        // Uncomment below if Async in MainActivity was uncommented
-         String todayPollenCount = String.valueOf(globalState.getTodayPollenCount());
-//        String todayPollenCount = "0";
-
-        Marker marker = googleMap.addMarker(new MarkerOptions().position(location).title(todayPollenCount)); // marker for current location
-        marker.showInfoWindow();
-
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-        googleMap.setMinZoomPreference(15);
+        googleMap.setMinZoomPreference(12);
 
         // TO DO: Populate map with more markers using another API for nearby zip codes
+        Log.d("Print", "GeoNames Api called");
         AsyncTask asyncTask = new GeoNamesApi(googleMap).execute();
     }
 }
