@@ -6,6 +6,7 @@ package com.example.whatsmyallergy;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Notification;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.design.widget.BottomNavigationView;
@@ -249,6 +250,47 @@ public class SettingsPage extends AppCompatActivity {
         }
     }
 
+
+    //// NOTIFICATIONS
+    private Button settingsEnableNotifications;
+    private Button settingsDisableNotifications;
+
+    public void startNotifications(View view) {
+
+        settingsEnableNotifications = findViewById(R.id.settings_enableNotifications);
+        settingsDisableNotifications = findViewById(R.id.settings_disableNotifications);
+        settingsEnableNotifications.setVisibility(View.INVISIBLE);
+        settingsDisableNotifications.setVisibility(View.VISIBLE);
+        Log.d(TAG, (String.format(Locale.ENGLISH, "Notifications ENABLED")));
+
+        //SEND NOTIFICATION LIKE THIS
+        Notification.Builder nb = mNotificationUtils.
+                getAndroidChannelNotification("What's My Allergy", "Notifications have been enabled.");
+
+        mNotificationUtils.getManager().notify(101, nb.build());
+
+
+    }
+
+    public void stopNotifications(View view) {
+
+        settingsEnableNotifications = findViewById(R.id.settings_enableNotifications);
+        settingsDisableNotifications = findViewById(R.id.settings_disableNotifications);
+        settingsEnableNotifications.setVisibility(View.VISIBLE);
+        settingsDisableNotifications.setVisibility(View.INVISIBLE);
+        Log.d(TAG, (String.format(Locale.ENGLISH, "Notifications DISABLED")));
+
+        //SEND NOTIFICATION LIKE THIS
+        Notification.Builder nb = mNotificationUtils.
+                getAndroidChannelNotification("What's My Allergy", "Notifications have been disabled.");
+
+        mNotificationUtils.getManager().notify(101, nb.build());
+
+
+    }
+
+    ////
+
     /**
      * Sets up the location request. Android has two location request settings:
      * {@code ACCESS_COARSE_LOCATION} and {@code ACCESS_FINE_LOCATION}. These settings control
@@ -430,6 +472,13 @@ public class SettingsPage extends AppCompatActivity {
             settingsEnableLocation.setVisibility(View.INVISIBLE);
             settingsDisableLocation.setVisibility(View.VISIBLE);
             Log.d(TAG,(String.format(Locale.ENGLISH, "Location ENABLED")));
+
+            //SEND NOTIFICATION LIKE THIS
+            Notification.Builder nb = mNotificationUtils.
+                    getAndroidChannelNotification("What's My Allergy", "Location has been enabled.");
+
+            mNotificationUtils.getManager().notify(101, nb.build());
+            //
 
         } else {
             settingsEnableLocation.setEnabled(true);
