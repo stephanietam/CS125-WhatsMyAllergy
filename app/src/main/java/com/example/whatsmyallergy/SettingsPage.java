@@ -75,6 +75,8 @@ import static com.example.whatsmyallergy.MainActivity.globalState;
  */
 public class SettingsPage extends AppCompatActivity {
 
+    private NotificationUtils mNotificationUtils;
+
     //private GlobalState state = new GlobalState();
     private static final String TAG = SettingsPage.class.getSimpleName();
 
@@ -183,6 +185,7 @@ public class SettingsPage extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        mNotificationUtils = new NotificationUtils(this);
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_settings_page);
 
