@@ -174,6 +174,7 @@ public class Suggestions {
             }
         }
 
+        globalState.setTodaySuggestion(suggestionStrings.get(highestType));
         // get suggestions of highest type
         return suggestionStrings.get(highestType);
     }

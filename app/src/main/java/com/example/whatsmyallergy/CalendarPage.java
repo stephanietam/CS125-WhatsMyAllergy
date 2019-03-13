@@ -65,6 +65,7 @@ public class CalendarPage extends AppCompatActivity {
     boolean olderDateSelected = false;
     List<String> symptomList = new ArrayList<>(Arrays.asList("Runny nose", "Watery eyes","Sneezing","Coughing","Itchy eyes and nose","Dark circles","Inflamed nasal passage","Itchy throat and mouth","Skin reactions","Ear pressure","Fatigue"));
     Map<String, ArrayList<String>> convertedSymptomMap;
+    //ArrayList<String> todaySymptoms = new ArrayList<>();
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -453,19 +454,35 @@ public class CalendarPage extends AppCompatActivity {
     //Submit button clicked
     public void onSubmitClicked(View view) {
         symptomMap.put(date,daySymptoms);
-
         globalState.setCalendarEntries(symptomMap);
+
+        ArrayList<String> todaySymptoms = new ArrayList<>();
+        todaySymptoms = symptomMap.get(currentDate);
+        if(todaySymptoms != null)
+        {
+            globalState.setTodaySymptomEntries(todaySymptoms);
+        }
 
         //gson.toJson(symptomMap);
         //System.out.println("JSON : " + gson.toJson(symptomMap));
 
-        System.out.println("Elements of ArrayList of String Type: " + symptomMap);
+        //System.out.println("Elements of ArrayList of String Type: " + symptomMap);
+
+        String todaysSuggestionText = String.join(", ", globalState.getTodaysSuggestion());
+
+        //System.out.println("today's suggestiont text = " + todaysSuggestionText);
 
         //SEND NOTIFICATION LIKE THIS
         Notification.Builder nb = mNotificationUtils.
-                getAndroidChannelNotification("What's My Allergy", "New recommendations for your symptoms.");
+                getAndroidChannelNotification("What's My Allergy", todaysSuggestionText);
 
         mNotificationUtils.getManager().notify(101, nb.build());
         Log.d("Calendar Page", (String.format(Locale.ENGLISH, "Submit clicked!!!")));
+
+        if(symptomMap.containsKey(currentDate))
+        {
+            Intent intent = new Intent(CalendarPage.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 }
