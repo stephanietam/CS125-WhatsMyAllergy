@@ -11,7 +11,7 @@
     <string name="high_severity_text">HIGH</string>
     <string name="today_text">Today\'s Pollen Count</string>
     <string name="pollen_img_description">desc</string>
-    <string name="suggestion_text">Suggestions</string>
+    <string name="suggestion_text">Suggestions based on symptoms</string>
     <string name="button_text">Enter Today\'s Symptoms</string>
     <string name="accu_apikey">HMoCMG0Z9rnwGcuwnVzfOVTbhK77TexE</string>
     <string name="accu_5dayApiURL">http://dataservice.accuweather.com/forecasts/v1/daily/5day/</string>

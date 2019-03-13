@@ -42,7 +42,6 @@ public class AccuWeatherApi extends AsyncTask<Void, Void, Void> {
             JSONObject jsonObject = new JSONObject(forecastResponse);
             JSONArray dailyForecastsJSON = jsonObject.getJSONArray("DailyForecasts");
             processForecast(dailyForecastsJSON);
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -77,10 +76,13 @@ public class AccuWeatherApi extends AsyncTask<Void, Void, Void> {
 
                 for (int i = 0; i < week.length; ++i) {
                     TextView[] day = week[i];
-                    day[0].setText(fiveDayForecast.getDaysOfWeek()[i]);
-
-                    int count = fiveDayForecast.getDayN(i).getHighestPollutant().getValue();
-                    day[1].setText(count+""); // count
+                    try {
+                        day[0].setText(fiveDayForecast.getDaysOfWeek()[i]);
+                        int count = fiveDayForecast.getDayN(i).getHighestPollutant().getValue();
+                        day[1].setText(count+""); // count
+                    } catch (NullPointerException e) {
+                        Log.d("Print", "API ran out of tries.");
+                    }
                 }
             }
         });

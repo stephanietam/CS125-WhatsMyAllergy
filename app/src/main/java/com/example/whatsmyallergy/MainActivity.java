@@ -1,37 +1,28 @@
 package com.example.whatsmyallergy;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     static GlobalState globalState;
+    private Suggestions suggestions;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -65,16 +56,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Home");
 
         globalState = (GlobalState)getApplication();
-        updateAfterSymptomsComplete();
+
+        double[] loc = globalState.getLatLong();
+        if (loc[0] == 0 && loc[1] == 0) {
+            String postalCode = globalState.getPostalCode();
+            double[] latlng = findLatLng(postalCode);
+            globalState.setCurrentGlobalLocation(latlng[0], latlng[1]);
+        }
+
+        // check if the symptoms of the day are complete
+        // if so, then display suggestions instead of button
+        if (globalState.checkDailySymptomsComplete()) {
+            suggestions = new Suggestions(this);
+            setSuggestionsView();
+            updateAfterSymptomsComplete(); // removes button
+        }
 
         // Getting location key
-/*        if (!globalState.checkLocationIsSet()) { // OR location is different
-            AsyncTask asyncTask = new AccuWeatherApi(this).execute();
+        String currentPostalCode = globalState.getPostalCode();
+        if (!globalState.checkLocationIsSet() ||
+                globalState.prevPostalCode!=currentPostalCode) { // OR location is different
+            globalState.prevPostalCode = globalState.getPostalCode();
+//            AsyncTask asyncTask = new AccuWeatherApi(this).execute();
         } else {
             setTextViews();
-        }*/
+        }
 
         // Waiting for symptoms button click
         Button symptoms_button = (Button) findViewById(R.id.symptoms_button);
@@ -90,6 +99,37 @@ public class MainActivity extends AppCompatActivity {
         // Bottom Navigation
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    public double[] findLatLng(String postalCode) {
+        double[] latlng = {0,0};
+
+        Geocoder gc = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = gc.getFromLocationName(postalCode, 10);
+            if (addresses.size()>=1) {
+                latlng[0] = addresses.get(0).getLatitude();
+                latlng[1] = addresses.get(0).getLongitude();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return latlng;
+    }
+
+    private void setSuggestionsView() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                TextView suggestionsView = findViewById(R.id.symptoms_text);
+                String suggestionText = "";
+                ArrayList<String> suggestionsList = suggestions.getCurrentDaySuggestions();
+                for (int i = 0; i < suggestionsList.size(); ++i) {
+                    suggestionText += suggestionsList.get(i) + "\n";
+                }
+                suggestionsView.setText(suggestionText);
+            }
+        });
     }
 
     private void setTextViews() {
@@ -158,69 +198,6 @@ public class MainActivity extends AppCompatActivity {
             scroll_constraint.setVisibility(View.INVISIBLE);
             suggestion_title.setVisibility(View.INVISIBLE);
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.O)
-    private void processForecastFromFile(String path) {
-        String json = "";
-        try {
-
-            InputStream is = getAssets().open(path);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while ((line = reader.readLine()) != null)
-                json += line + "\n";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray dailyForecastsJSON = jsonObject.getJSONArray("DailyForecasts");
-
-            ArrayList<Day> fiveDays = new ArrayList<>();
-
-            /// PROCESS JSON
-            for (int i = 0; i < dailyForecastsJSON.length(); ++i) {
-                JSONArray pollens = dailyForecastsJSON.getJSONObject(i).getJSONArray("AirAndPollen");
-
-                ArrayList<Pollen> pollenList = new ArrayList<>();
-                for (int j = 0; j < pollens.length(); ++j) {
-                    JSONObject pollen = pollens.getJSONObject(j);
-//                    Log.d("Print",pollen.toString());
-                    pollenList.add(new Pollen(pollen.getString("Name"),
-                                                Integer.parseInt(pollen.getString("Value")),
-                                                pollen.getString("Category"),
-                                                pollen.getString("CategoryValue")));
-
-                }
-
-//                for (int j= 0; j < pollenList.size(); ++j) {
-//                    Log.d("Print", pollenList.get(j).getName());
-//                }
-
-
-                String dateString = dailyForecastsJSON.getJSONObject(i).getString("Date").substring(0,10);
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate localDate = LocalDate.parse(dateString, formatter);
-                Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//                Log.d("Print",date.toString());
-
-                Day day = new Day(date, pollenList);
-                fiveDays.add(day);
-
-            }
-
-            globalState.setLocationName("San Francisco, CA");
-            FiveDayForecast fiveDayForecast = new FiveDayForecast(fiveDays);
-            globalState.setFiveDayForecast(fiveDayForecast);
-            ///
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        FiveDayForecast s = globalState.getFiveDayForecast();
     }
 }
 
