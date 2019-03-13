@@ -1,6 +1,7 @@
 package com.example.whatsmyallergy;
 
 import android.app.Application;
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
@@ -15,7 +16,17 @@ import java.util.List;
 import java.util.Locale;
 
 public class GlobalState extends Application {
-    private boolean daily_symptoms_complete;
+    private Map<String, ArrayList<String>> calendarEntries;
+
+    private String currentSeason;
+
+    private double[] currentGlobalLocation;
+
+    public String prevPostalCode;
+
+    public HashMap<String, String[]> nearbyPostalCodes;
+
+    private String locationName;
 
     private String apiLocationKey;
 
@@ -23,42 +34,23 @@ public class GlobalState extends Application {
 
     private String postalCode;
 
-    private FiveDayForecast fiveDayForecast;
-
-    private String locationName;
-
-    private Map<String, ArrayList<String>> calendarEntries = new HashMap<String, ArrayList<String>>();
-
-    public Map<String, ArrayList<String>> getCalendarEntries(Map<String, ArrayList<String>> entry)
-    {
-        return entry;
-    }
-
-    public String calendarEntriesLength () {
-        return (""+ calendarEntries.size());
-    }
-
-    private String currentSeason;
-
     private ArrayList<String> todaySymptoms;
 
-    private double[] currentGlobalLocation;
+    private boolean daily_symptoms_complete;
 
-    public String prevPostalCode;
-
-    public ArrayList<String[]> nearbyPostalCodes;
+    private FiveDayForecast fiveDayForecast;
 
     public GlobalState() {
         locationSet = false;
         currentSeason = setSeason();
 
-        postalCode = prevPostalCode = "92506"; // postalCode should be taken from profile
-        // prevPostalCode is to look for new change in location
+        postalCode = prevPostalCode = "92506"; // postalCode should be taken from profile, prevPostalCode is to look for new change in location
+        // need to set latlng in MainActivity
 
-        nearbyPostalCodes = new ArrayList<String[]>(); // nearby areas to get pollen counts for the map
+        nearbyPostalCodes = new HashMap<>(); // "Zipcode": [lat, lng, serverity] nearby areas to get pollen counts for the map
 
         //settings --> location
-        currentGlobalLocation = new double[] {0,0}; // TO DO: Should be taken from profile
+        currentGlobalLocation = new double[] {0,0}; // TO DO: Should be taken from zipcode
 
         // Sample symptoms -- Should be taken from profile
         todaySymptoms = new ArrayList<>();
@@ -67,6 +59,91 @@ public class GlobalState extends Application {
         todaySymptoms.add("coughing");
         todaySymptoms.add("fatigue");
         todaySymptoms.add("itchy_throat");
+
+        calendarEntries = new HashMap<String, ArrayList<String>>();
+    }
+
+
+    /**
+     * Calendar
+     */
+
+    public Map<String, ArrayList<String>> getCalendarEntries(Map<String, ArrayList<String>> entry) {
+        return entry;
+    }
+
+    public Map<String, ArrayList<String>> getGlobalCalendarEntries()
+    {
+        return calendarEntries;
+    }
+
+
+    public String calendarEntriesLength () {
+        return (""+ calendarEntries.size());
+    }
+
+    //public Map<String, ArrayList<String>> setCalendarEntries(Map<String, ArrayList<String>> savedMap) {
+    public void setCalendarEntries(Map<String, ArrayList<String>> savedMap) {
+        calendarEntries.putAll(savedMap);
+        System.out.println("Global state map = " + calendarEntries);
+    }
+
+    /**
+     * APIs
+     */
+
+    public String getPostalCodeRequest() {
+        String url = getResources().getString(R.string.accu_postalCodeApiURL);
+        String apiKey = getResources().getString(R.string.accu_apikey);
+
+        String requestURL = url+"?apikey="+apiKey+"&q="+postalCode;
+        Log.d("Print", "PostalCode GET request URL: " + requestURL);
+        return requestURL;
+    }
+
+    public String getForecastRequest() {
+        String weatherAPI = getResources().getString(R.string.accu_5dayApiURL);
+        String apiKey = getResources().getString(R.string.accu_apikey);
+
+        String requestURL = weatherAPI+apiLocationKey+"?apikey="+apiKey+"&details=true";
+        Log.d("Print", "Forecast request URL: " + requestURL);
+
+        return requestURL;
+    }
+
+
+    /**
+     * Symptoms and Forecast
+     */
+
+    public boolean checkDailySymptomsComplete() {
+        return daily_symptoms_complete;
+    }
+
+    public void setDailySymptomsComplete(boolean complete) {
+        daily_symptoms_complete = complete;
+    }
+
+
+    public void setFiveDayForecast(FiveDayForecast fiveDayForecast) {
+        this.fiveDayForecast = fiveDayForecast;
+    }
+
+    public FiveDayForecast getFiveDayForecast() {
+        return fiveDayForecast;
+    }
+
+    public String getTodayPollenStatus() {
+        try {
+            return fiveDayForecast.getDayN(0).getHighestPollutant().getSeverity();
+        } catch (NullPointerException e) {
+            Log.d("Print", "fiveDayForecast is empty");
+        }
+        return "NULL";
+    }
+
+    public String getCurrentSeason() {
+        return currentSeason;
     }
 
     public String setSeason() {
@@ -81,12 +158,35 @@ public class GlobalState extends Application {
         return seasons[ date.getMonth() ];
     }
 
-    public boolean checkDailySymptomsComplete() {
-        return daily_symptoms_complete;
+    public ArrayList<String> getTodaySymptoms() {
+        return todaySymptoms;
     }
 
-    public void setDailySymptomsComplete(boolean complete) {
-        daily_symptoms_complete = complete;
+
+    /**
+     * Postal Code
+     */
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+
+    /**
+     * Lat/Lng Location
+     */
+
+    public void setCurrentGlobalLocation(double lat, double lng) {
+        this.currentGlobalLocation[0] = lat;
+        this.currentGlobalLocation[1] = lng;
+    }
+
+    public double[] getLatLong() {
+        return currentGlobalLocation;
     }
 
     public void setApiLocationKey(String key) {
@@ -113,97 +213,15 @@ public class GlobalState extends Application {
         return locationName;
     }
 
-    public void setFiveDayForecast(FiveDayForecast fiveDayForecast) {
-        this.fiveDayForecast = fiveDayForecast;
-    }
 
-    public FiveDayForecast getFiveDayForecast() {
-        return fiveDayForecast;
-    }
+    /**
+     * Map
+     */
 
-    public int getTodayPollenCount() {
-        try {
-            return fiveDayForecast.getDayN(0).getHighestPollutant().getValue();
-        } catch (NullPointerException e) {
-            Log.d("Print", "fiveDayForecast is empty");
-        }
-        return 0;
-    }
+    public String lastMapRun = "";
 
-    public String getCurrentSeason() {
-        return currentSeason;
-    }
-
-    public ArrayList<String> getTodaySymptoms() {
-        return todaySymptoms;
-    }
-
-
-    /* API */
-
-    public String getPostalCodeRequest() {
-        String url = getResources().getString(R.string.accu_postalCodeApiURL);
-        String apiKey = getResources().getString(R.string.accu_apikey);
-
-        String requestURL = url+"?apikey="+apiKey+"&q="+postalCode;
-        Log.d("Print", "PostalCode GET request URL: " + requestURL);
-        return requestURL;
-    }
-
-    public String getForecastRequest() {
-        String weatherAPI = getResources().getString(R.string.accu_5dayApiURL);
-        String apiKey = getResources().getString(R.string.accu_apikey);
-
-        String requestURL = weatherAPI+apiLocationKey+"?apikey="+apiKey+"&details=true";
-        Log.d("Print", "Forecast request URL: " + requestURL);
-
-        return requestURL;
-    }
-
-
-    /* Postal Code */
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public String setPostalCode() {
-        String postalCode = getPostalCode();
-        double[] latLong = getLatLong();
-        Geocoder gc = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> addresses = gc.getFromLocation(latLong[0],latLong[1],1);
-            if (addresses.size()>=1) {
-                postalCode = addresses.get(0).getPostalCode();
-                setPostalCode(postalCode);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.postalCode = postalCode;
-        return postalCode;
-    }
-
-
-    /* Latitude and Longitude */
-
-    public void setCurrentGlobalLocation(double lat, double lng) {
-        this.currentGlobalLocation[0] = lat;
-        this.currentGlobalLocation[1] = lng;
-        setPostalCode();
-    }
-
-    public double[] getLatLong() {
-        return currentGlobalLocation;
-    }
-
-    public void setLatLong(double lat, double lng) {
-        currentGlobalLocation[0] = lat;
-        currentGlobalLocation[1] = lng;
+    public String getLastRun() {
+        return lastMapRun;
     }
 
 

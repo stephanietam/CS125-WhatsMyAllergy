@@ -1,35 +1,61 @@
 package com.example.whatsmyallergy;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Button;
+
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import android.widget.CalendarView;
 import java.util.Calendar;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 import java.util.List;
 import java.util.Arrays;
 import android.widget.LinearLayout;
+import java.io.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import java.text.SimpleDateFormat;
 import static com.example.whatsmyallergy.MainActivity.globalState;
 
 
 public class CalendarPage extends AppCompatActivity {
 
+    private NotificationUtils mNotificationUtils;
+
+    private Object handleObject(JsonObject json, JsonDeserializationContext context) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        for(Map.Entry<String, JsonElement> entry : json.entrySet())
+            map.put(entry.getKey(), context.deserialize(entry.getValue(), Object.class));
+        return map;
+    }
+
     CalendarView symptomCalendar;
     private TextView mTextMessage;
+    Gson gson = new Gson();
     String currentDate;
     String date;
     ArrayList<String> daySymptoms = new ArrayList<String>();
     Map<String, ArrayList<String>> symptomMap = new HashMap<String, ArrayList<String>>();
+    Map<String, ArrayList<String>> savedSymptomMap = new HashMap<String, ArrayList<String>>();
     String[] selectedDateArr;
     String [] currentDateArr;
     int currentMonth;
@@ -38,6 +64,7 @@ public class CalendarPage extends AppCompatActivity {
     int selectedDay;
     boolean olderDateSelected = false;
     List<String> symptomList = new ArrayList<>(Arrays.asList("Runny nose", "Watery eyes","Sneezing","Coughing","Itchy eyes and nose","Dark circles","Inflamed nasal passage","Itchy throat and mouth","Skin reactions","Ear pressure","Fatigue"));
+    Map<String, ArrayList<String>> convertedSymptomMap;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,11 +96,16 @@ public class CalendarPage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mNotificationUtils = new NotificationUtils(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_page);
         setTitle("Calendar");
 
-        currentDate = new SimpleDateFormat("MM/dd/yyyy").format(Calendar.getInstance().getTime());
+        //Map<String, ArrayList<String>> convertedSymptomMap = new HashMap<String, ArrayList<String>>();
+        convertedSymptomMap = globalState.getGlobalCalendarEntries();
+        System.out.println("global state hash map = " + convertedSymptomMap);
+
+        currentDate = new SimpleDateFormat("M/dd/yyyy").format(Calendar.getInstance().getTime());
         System.out.println("Current Date : " + currentDate);
 
         currentDateArr = currentDate.split("/");
@@ -83,6 +115,39 @@ public class CalendarPage extends AppCompatActivity {
 
         //Calendar
         symptomCalendar = (CalendarView)findViewById(R.id.calendarView);
+
+        //sets checkboxes for default day
+        ArrayList<String> checkedSymptoms = convertedSymptomMap.get(currentDate);
+
+        LinearLayout layout = (LinearLayout)findViewById(R.id.checkboxLayout);
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View v = layout.getChildAt(i);
+            if (v instanceof CheckBox) {
+                ((CheckBox) v).setChecked(false);
+            }
+        }
+
+        if(checkedSymptoms != null)
+        {
+            for (int i = 0; i < layout.getChildCount(); i++) {
+                View v = layout.getChildAt(i);
+                if (v instanceof CheckBox) {
+                    for(String symptom : symptomList)
+                    {
+                        if((checkedSymptoms.contains(symptom)) && ((((CheckBox) v).getText()).equals(symptom)))
+                        {
+                            ((CheckBox)v).setChecked(true);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            System.out.println("Symptom List is empty");
+        }
+
+
         symptomCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
@@ -115,12 +180,20 @@ public class CalendarPage extends AppCompatActivity {
                     }
                 }
 
+                //JSON
+                //String json = gson.toJson(symptomMap);
+//                Map<String, ArrayList<String>> convertedSymptomMap = new HashMap<String, ArrayList<String>>();
+//                convertedSymptomMap = globalState.getGlobalCalendarEntries();
+//                System.out.println("global state hash map = " + convertedSymptomMap);
+                //convertedSymptomMap = gson.fromJson(json,convertedSymptomMap.getClass());
+
                 //if date clicked on is in the past
                 if(selectedMonth > currentMonth || selectedMonth == currentMonth && selectedDay >= currentDay)
                 {
                     olderDateSelected = true;
-                    ArrayList<String> checkedSymptoms = symptomMap.get(date);
-                    List<CheckBox> chosenSymptoms= new ArrayList<CheckBox>();
+                    System.out.println("date = " + date);
+                    ArrayList<String> checkedSymptoms = convertedSymptomMap.get(date);
+                    System.out.println("checkedSymptoms for the date " + checkedSymptoms);
 
                     if(checkedSymptoms != null)
                     {
@@ -132,7 +205,6 @@ public class CalendarPage extends AppCompatActivity {
                                 {
                                     if((checkedSymptoms.contains(symptom)) && ((((CheckBox) v).getText()).equals(symptom)))
                                     {
-                                        chosenSymptoms.add((CheckBox)v);
                                         ((CheckBox)v).setChecked(true);
                                     }
                                 }
@@ -188,9 +260,8 @@ public class CalendarPage extends AppCompatActivity {
                 if(checked)
                 {
                     daySymptoms.add("Runny nose");
-                    if(olderDateSelected == true)
-                    {
-                        ((CheckBox)view).setChecked(true);
+                    if(olderDateSelected == true) {
+                        ((CheckBox) view).setChecked(true);
                     }
                 }
 
@@ -382,48 +453,19 @@ public class CalendarPage extends AppCompatActivity {
     //Submit button clicked
     public void onSubmitClicked(View view) {
         symptomMap.put(date,daySymptoms);
+
+        globalState.setCalendarEntries(symptomMap);
+
+        //gson.toJson(symptomMap);
+        //System.out.println("JSON : " + gson.toJson(symptomMap));
+
         System.out.println("Elements of ArrayList of String Type: " + symptomMap);
+
+        //SEND NOTIFICATION LIKE THIS
+        Notification.Builder nb = mNotificationUtils.
+                getAndroidChannelNotification("What's My Allergy", "New recommendations for your symptoms.");
+
+        mNotificationUtils.getManager().notify(101, nb.build());
+        Log.d("Calendar Page", (String.format(Locale.ENGLISH, "Submit clicked!!!")));
     }
 }
-
-
-//                symptomMap.put("Runny Nose",0);
-//                symptomMap.put("Watery Eyes",0);
-//                symptomMap.put("Sneezing",0);
-//                symptomMap.put("Coughing",0);
-//                symptomMap.put("Itchy eyes and nose",0);
-//                symptomMap.put("Dark circles",0);
-//                symptomMap.put("Inflamed nasal passage",0);
-//                symptomMap.put("Itchy throat and mouth",0);
-//                symptomMap.put("Skin reactions",0);
-//                symptomMap.put("Ear pressure",0);
-//                symptomMap.put("Fatigue",0);
-
-//iterate through symptoms
-
-//                        if(checkedSymptoms.contains("Watery Eyes"))
-//                        {
-//                            wateryEyesCheckbox.setChecked(true);
-//                        }
-//                        else if(checkedSymptoms.contains("Watery Eyes")==false)
-//                        {
-//                            wateryEyesCheckbox.setChecked(false);
-//                        }
-//                        if(checkedSymptoms.contains("Runny Nose"))
-//                        {
-//                            runnyNoseCheckbox.setChecked(true);
-//                        }
-//                        else if(checkedSymptoms.contains("Runny Nose")==false)
-//                        {
-//                            wateryEyesCheckbox.setChecked(false);
-//                        }
-
-//                                for(CheckBox c : chosenSymptoms)
-//                                {
-//                                    System.out.println("Chosen Symptom = " + ((CheckBox) v2).getText());
-//
-//                                    String a = (((CheckBox) v2).getText()).toString();
-//                                    String b = (c.getText()).toString();
-//
-//
-//                                }

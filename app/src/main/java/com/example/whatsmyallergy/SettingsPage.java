@@ -6,6 +6,9 @@ package com.example.whatsmyallergy;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Notification;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.design.widget.BottomNavigationView;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -38,8 +41,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -70,6 +75,8 @@ import static com.example.whatsmyallergy.MainActivity.globalState;
  * (as specified in AndroidManifest.xml).
  */
 public class SettingsPage extends AppCompatActivity {
+
+    private NotificationUtils mNotificationUtils;
 
     //private GlobalState state = new GlobalState();
     private static final String TAG = SettingsPage.class.getSimpleName();
@@ -179,6 +186,7 @@ public class SettingsPage extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        mNotificationUtils = new NotificationUtils(this);
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_settings_page);
 
@@ -241,6 +249,47 @@ public class SettingsPage extends AppCompatActivity {
             //updateUI();
         }
     }
+
+
+    //// NOTIFICATIONS
+    private Button settingsEnableNotifications;
+    private Button settingsDisableNotifications;
+
+    public void startNotifications(View view) {
+
+        settingsEnableNotifications = findViewById(R.id.settings_enableNotifications);
+        settingsDisableNotifications = findViewById(R.id.settings_disableNotifications);
+        settingsEnableNotifications.setVisibility(View.INVISIBLE);
+        settingsDisableNotifications.setVisibility(View.VISIBLE);
+        Log.d(TAG, (String.format(Locale.ENGLISH, "Notifications ENABLED")));
+
+        //SEND NOTIFICATION LIKE THIS
+        Notification.Builder nb = mNotificationUtils.
+                getAndroidChannelNotification("What's My Allergy", "Notifications have been enabled.");
+
+        mNotificationUtils.getManager().notify(101, nb.build());
+
+
+    }
+
+    public void stopNotifications(View view) {
+
+        settingsEnableNotifications = findViewById(R.id.settings_enableNotifications);
+        settingsDisableNotifications = findViewById(R.id.settings_disableNotifications);
+        settingsEnableNotifications.setVisibility(View.VISIBLE);
+        settingsDisableNotifications.setVisibility(View.INVISIBLE);
+        Log.d(TAG, (String.format(Locale.ENGLISH, "Notifications DISABLED")));
+
+        //SEND NOTIFICATION LIKE THIS
+        Notification.Builder nb = mNotificationUtils.
+                getAndroidChannelNotification("What's My Allergy", "Notifications have been disabled.");
+
+        mNotificationUtils.getManager().notify(101, nb.build());
+
+
+    }
+
+    ////
 
     /**
      * Sets up the location request. Android has two location request settings:
@@ -424,6 +473,13 @@ public class SettingsPage extends AppCompatActivity {
             settingsDisableLocation.setVisibility(View.VISIBLE);
             Log.d(TAG,(String.format(Locale.ENGLISH, "Location ENABLED")));
 
+            //SEND NOTIFICATION LIKE THIS
+            Notification.Builder nb = mNotificationUtils.
+                    getAndroidChannelNotification("What's My Allergy", "Location has been enabled.");
+
+            mNotificationUtils.getManager().notify(101, nb.build());
+            //
+
         } else {
             settingsEnableLocation.setEnabled(true);
             settingsDisableLocation.setEnabled(false);
@@ -441,11 +497,22 @@ public class SettingsPage extends AppCompatActivity {
 
             Log.d(TAG,(String.format(Locale.ENGLISH, "%f,%f",
                     mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude())));
-            globalState.setCurrentGlobalLocation(mCurrentLocation.getLatitude(),
-                    mCurrentLocation.getLongitude());
-            String update = (String.format(Locale.ENGLISH, "%f,%f",
-                    mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
-            updateTextView(update);
+
+            double[] latLng = {mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()};
+            double[] currentLatLng = globalState.getLatLong();
+            if ( latLng[0] != currentLatLng[0] && latLng[1] != currentLatLng[1] ) {
+                Log.d("Print","lat/lng update: " + currentLatLng[0] + " " + currentLatLng[1] +
+                                                            " to " + latLng[0] + " " + latLng[1]);
+                globalState.setCurrentGlobalLocation(mCurrentLocation.getLatitude(),
+                        mCurrentLocation.getLongitude());
+                // need to set postal code
+                globalState.setPostalCode(findPostalCode(latLng[0], latLng[1]));
+
+                String update = (String.format(Locale.ENGLISH, "%f,%f",
+                        mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+                updateTextView(update);
+            }
+
             //globalState.getCurrentGlobalLocation();
             //API here
             //https://samples.openweathermap.org/data/2.5/forecast?lat=35&lon=139&appid=b6907d289e10d714a6e88b30761fae22
@@ -476,6 +543,21 @@ public class SettingsPage extends AppCompatActivity {
 // Access the RequestQueue through your singleton class.
             MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
         }
+    }
+
+    public String findPostalCode(double lat, double lng) {
+        String postalCode = "";
+        Geocoder gc = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = gc.getFromLocation(lat,lng,1);
+            if (addresses.size()>=1) {
+                postalCode = addresses.get(0).getPostalCode();
+                globalState.setPostalCode(postalCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return postalCode==null ? globalState.getPostalCode() : postalCode;
     }
 
     /**
