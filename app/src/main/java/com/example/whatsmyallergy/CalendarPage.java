@@ -1,10 +1,12 @@
 package com.example.whatsmyallergy;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import android.widget.CalendarView;
 import java.util.Calendar;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
 import java.util.List;
 import java.util.Arrays;
@@ -23,6 +26,8 @@ import static com.example.whatsmyallergy.MainActivity.globalState;
 
 
 public class CalendarPage extends AppCompatActivity {
+
+    private NotificationUtils mNotificationUtils;
 
     CalendarView symptomCalendar;
     private TextView mTextMessage;
@@ -69,6 +74,8 @@ public class CalendarPage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mNotificationUtils = new NotificationUtils(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar_page);
         setTitle("Calendar");
@@ -383,6 +390,13 @@ public class CalendarPage extends AppCompatActivity {
     public void onSubmitClicked(View view) {
         symptomMap.put(date,daySymptoms);
         System.out.println("Elements of ArrayList of String Type: " + symptomMap);
+
+        //        //SEND NOTIFICATION LIKE THIS
+        Notification.Builder nb = mNotificationUtils.
+                getAndroidChannelNotification("What's My Allergy", "New recommendations for your symptoms.");
+
+        mNotificationUtils.getManager().notify(101, nb.build());
+        Log.d("Calendar Page", (String.format(Locale.ENGLISH, "Submit clicked!!!")));
     }
 }
 
