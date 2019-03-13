@@ -7,10 +7,7 @@ package com.example.whatsmyallergy;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
+
 import android.support.design.widget.BottomNavigationView;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -20,7 +17,6 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.design.widget.Snackbar;
 
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
