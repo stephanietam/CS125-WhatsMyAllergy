@@ -1,0 +1,92 @@
+{
+  "symptoms": {
+    "seasonal": [
+      "runny_nose",
+      "watery_eyes",
+      "sneezing",
+      "coughing",
+      "itchy_eyes",
+      "itchy_nose",
+      "dark_circles"
+    ],
+    "hay_fever": [
+      "watery_eyes",
+      "sneezing",
+      "coughing",
+      "itchy_eyes",
+      "dark_circles",
+      "inflamed_nasal_passage",
+      "itchy_throat",
+      "itchy_mouth",
+      "ear_pressure",
+      "fatigue"
+    ],
+    "dust_mites": [
+      "runny_nose",
+      "sneezing",
+      "itchy_eyes",
+      "red_eyes",
+      "stuffy_nose"
+    ],
+    "pets": [
+      "runny_nose",
+      "sneezing",
+      "coughing",
+      "itchy_eyes",
+      "red_eyes",
+      "stuffy_nose",
+      "wheezing",
+      "skin_reactions"
+    ]
+  },
+  "causes": {
+    "seasonal": {
+      "spring": ["trees, grass, weeds"],
+      "summer": ["grass", "weeds"],
+      "fall": ["ragweed", "mold", "dust_mites"],
+      "winter": ["dust_mites", "mold", "animals"]
+    },
+    "hay_fever": [
+      "Inhaling pollen and other allergens such as dust, animal dander, or mold"
+    ],
+    "dust_mites": [
+      "Contact with dust mites"
+    ],
+    "pets": [
+      "Animal dander, saliva, or urine"
+    ]
+  },
+  "suggestions": {
+    "seasonal": {
+      "spring": [
+        "Go to your doctor and ask for the recommended medication."
+      ],
+      "summer": [
+        "Go to your doctor and ask for the recommended medication.",
+        "Stay indoors to reduce pollen intake."
+      ],
+      "fall": [
+        "Go to your doctor and ask for the recommended medication.",
+        "Stay indoors to reduce pollen intake.",
+        "Use a dehumidifier."
+      ],
+      "winter": [
+        "Take proper medication to reduce pollen allergies.",
+        "Use an air filter.",
+        "Clean your living area for dust mites."
+      ]
+    },
+    "hay_fever": [
+      "Take proper medication for hay fever.",
+      "Limit you outdoor activities.",
+      "Use nasal spray to remove particles from your nose."
+    ],
+    "dust_mites": [
+      "Keep your house temperature below 70 degrees fahrenheit and humidity lower than 70%.",
+      "Clean beddings and funitures regularly."
+    ],
+    "pets": [
+      "Take standard allergy drugs such as anthustamines, decongestants, nasal steroids, and allergy shots."
+    ]
+  }
+}

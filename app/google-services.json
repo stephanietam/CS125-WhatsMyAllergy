@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "630067430196",
+    "firebase_url": "https://what-s-my-allergy.firebaseio.com",
+    "project_id": "what-s-my-allergy",
+    "storage_bucket": "what-s-my-allergy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630067430196:android:ae535ac51b15e468",
+        "android_client_info": {
+          "package_name": "com.example.whatsmyallergy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "630067430196-ci55beoe02lu50b1uft3its8ieum0u8k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdltzgSWL9Oviq-ctzf8emw5W0_n720Yc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

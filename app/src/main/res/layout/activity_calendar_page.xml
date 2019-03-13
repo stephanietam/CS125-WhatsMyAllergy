@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CalendarPage">
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/navigation" />
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="407dp"
+        android:layout_height="326dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:fillViewport="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView">
+
+
+        <LinearLayout
+            android:id="@+id/checkboxLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <TextView
+                android:id="@+id/symptom_title"
+                android:layout_width="123dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginEnd="294dp"
+                android:layout_marginRight="294dp"
+                android:text="Symptoms "
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textSize="20dp" />
+
+            <CheckBox
+                android:id="@+id/Symptom_runnyNose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Runny nose" />
+
+            <CheckBox
+                android:id="@+id/Symptom_wateryEyes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Watery eyes" />
+
+            <CheckBox
+                android:id="@+id/Symptom_sneezing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Sneezing" />
+
+            <CheckBox
+                android:id="@+id/Symptom_coughing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Coughing" />
+
+            <CheckBox
+                android:id="@+id/Symptom_itchyEyesAndNose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Itchy eyes and nose" />
+
+            <CheckBox
+                android:id="@+id/Symptom_darkCircles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Dark circles under eyes" />
+
+            <CheckBox
+                android:id="@+id/Symptom_inflamedNasal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Inflamed nasal passages" />
+
+            <CheckBox
+                android:id="@+id/Symptom_itchyThroat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Itchy throat and mouth" />
+
+            <CheckBox
+                android:id="@+id/Symptom_skinReactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Skin reactions" />
+
+            <CheckBox
+                android:id="@+id/Symptom_earPressure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Ear pressure" />
+
+            <CheckBox
+                android:id="@+id/Symptom_fatigue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="selectSymptom"
+                android:text="Fatigue" />
+
+            <Button
+                android:id="@+id/calendar_submit_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:clickable="true"
+                android:onClick="onSubmitClicked"
+                android:paddingTop="5dp"
+                android:text="Submit" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+</android.support.constraint.ConstraintLayout>
