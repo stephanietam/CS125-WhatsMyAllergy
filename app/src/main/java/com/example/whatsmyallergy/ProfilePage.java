@@ -65,6 +65,7 @@ public class ProfilePage extends AppCompatActivity {
         MenuItem menuItem = navigation.getMenu().getItem(1);
         menuItem.setChecked(true);
 
+
         ListView knownAllergy = findViewById(R.id.allergyListView);
         String[] values = new String[] { "Ragweed", "Mold", "Pets",
                         "Grass"};

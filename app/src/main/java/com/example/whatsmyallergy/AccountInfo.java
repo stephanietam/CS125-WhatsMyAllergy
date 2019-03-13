@@ -22,7 +22,7 @@ public class AccountInfo extends AppCompatActivity {
 
     private Bundle userBundle;
     private Button finishButton;
-    private EditText editName, editDOB;
+    private EditText editName, editDOB, editZip;
     private Switch petSwitch;
     private String petStr;
     boolean petBool;
@@ -57,7 +57,7 @@ public class AccountInfo extends AppCompatActivity {
     private void checkComplete() {
         String userName = editName.getText().toString();
         String userDOB = editDOB.getText().toString();
-        if (userName.equals("") || userDOB.equals("") || (userName.replaceAll("[^A-Za-z0-9 ]", "").length() == 0)) {
+        if (userName.equals("") || userDOB.equals("") || (!checkZip()) || (userName.replaceAll("[^A-Za-z0-9 ]", "").length() == 0)) {
             finishButton.setEnabled(false);
         } else {
             finishButton.setEnabled(true);
@@ -65,10 +65,22 @@ public class AccountInfo extends AppCompatActivity {
 
     }
 
+    private boolean checkZip() {
+        String userZip = editZip.getText().toString();
+
+        if (userZip.equals("") || userZip.length()!=5 || (userZip.replaceAll("[^0-9]", "").length() != userZip.length()))
+        {
+            return false;
+        }
+        return true;
+
+    }
+
     private void getID ()
     {
         editName = findViewById(R.id.editName);
         editDOB = findViewById(R.id.editDOB);
+        editZip = findViewById(R.id.editZip);
         petSwitch = findViewById(R.id.petSwitch);
         grassKA =findViewById(R.id.grass_check_ka);
         treesKA =findViewById(R.id.tree_check_ka);
@@ -82,6 +94,7 @@ public class AccountInfo extends AppCompatActivity {
         moldFH = findViewById(R.id.mold_check_fh);
         dustFH = findViewById(R.id.dust_check_fh);
         petFH = findViewById(R.id.pet_check_fh);
+
     }
 
 
@@ -176,6 +189,8 @@ public class AccountInfo extends AppCompatActivity {
         petBool = false;
         editName.addTextChangedListener(textWatcher);
         editDOB.addTextChangedListener(textWatcher);
+        editZip.addTextChangedListener(textWatcher);
+
         petSwitch.setChecked(false);
 
         petSwitch.setOnClickListener(new View.OnClickListener() {
@@ -197,7 +212,7 @@ public class AccountInfo extends AppCompatActivity {
             public void onClick(View v) {
                 petBool = Boolean.valueOf(petStr);
                 String key = userBundle.getString("uid");
-                Users user = new Users(key, userBundle.getString("email"), editName.getText().toString(),editDOB.getText().toString(), petBool, knownAllergenList, familyHistoryList);
+                Users user = new Users(key, userBundle.getString("email"), editName.getText().toString(),editDOB.getText().toString(), editZip.getText().toString(), petBool, knownAllergenList, familyHistoryList);
                 myRef.child(key).setValue(user);
                 startActivity(new Intent(AccountInfo.this, MainActivity.class));
             }
