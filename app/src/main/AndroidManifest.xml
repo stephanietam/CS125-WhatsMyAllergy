@@ -23,6 +23,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity android:name=".MainActivity"
+            android:label="@string/app_name"></activity>
         <activity
             android:name=".SettingsPage"
             android:label="@string/title_activity_settings_page" />
@@ -42,6 +44,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AccountInfo"
+            android:label="Account Info"></activity>
     </application>
 
 </manifest>
