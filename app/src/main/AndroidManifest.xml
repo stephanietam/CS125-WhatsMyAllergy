@@ -3,8 +3,8 @@
     package="com.example.whatsmyallergy">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".GlobalState"
@@ -23,9 +23,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity android:name=".MainActivity"
+            android:label="@string/app_name"></activity>
         <activity
             android:name=".SettingsPage"
-            android:label="@string/title_activity_settings_page"></activity>
+            android:label="@string/title_activity_settings_page" />
         <activity
             android:name=".MapPage"
             android:label="@string/title_activity_map_page" />
@@ -35,15 +37,15 @@
         <activity
             android:name=".CalendarPage"
             android:label="@string/title_activity_calendar_page" />
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
+        <activity android:name=".SignupActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AccountInfo"
+            android:label="Account Info"></activity>
     </application>
 
 </manifest>
