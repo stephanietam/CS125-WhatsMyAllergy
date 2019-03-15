@@ -51,7 +51,7 @@ public class GlobalState extends Application {
         postalCode = prevPostalCode = "92506"; // postalCode should be taken from profile, prevPostalCode is to look for new change in location
         // need to set latlng in MainActivity
 
-        nearbyPostalCodes = new HashMap<>(); // "Zipcode": [lat, lng, serverity] nearby areas to get pollen counts for the map
+        nearbyPostalCodes = new HashMap<>(); // "Zipcode": [lat, lng, severity] nearby areas to get pollen counts for the map
 
         //settings --> location
         currentGlobalLocation = new double[] {0,0}; // TO DO: Should be taken from zipcode
@@ -101,7 +101,18 @@ public class GlobalState extends Application {
 
     public void setCalendarEntries(Map<String, ArrayList<String>> savedMap) {
         calendarEntries.putAll(savedMap);
+
         //System.out.println("Global state map = " + calendarEntries);
+    }
+
+    public void setTodaySuggestion(ArrayList<String> suggestion){
+        todaysSuggestion.addAll(suggestion);
+        System.out.println("setSuggestions = " + todaysSuggestion);
+    }
+
+    public ArrayList<String> getTodaysSuggestion(){
+        System.out.println("getSuggestions = " + todaysSuggestion);
+        return todaysSuggestion;
     }
 
     /**
@@ -161,17 +172,6 @@ public class GlobalState extends Application {
     public String getCurrentSeason() {
         return currentSeason;
     }
-
-    public void setTodaySuggestion(ArrayList<String> suggestion){
-        todaysSuggestion.addAll(suggestion);
-        System.out.println("setSuggestions = " + todaysSuggestion);
-    }
-
-    public ArrayList<String> getTodaysSuggestion(){
-        System.out.println("getSuggestions = " + todaysSuggestion);
-        return todaysSuggestion;
-    }
-
 
     public String setSeason() {
         String seasons[] = {

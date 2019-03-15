@@ -32,6 +32,7 @@ import static com.example.whatsmyallergy.MainActivity.globalState;
 
 
 public class CalendarPage extends AppCompatActivity {
+    private Suggestions suggestions;
 
     private NotificationUtils mNotificationUtils;
 
@@ -356,7 +357,7 @@ public class CalendarPage extends AppCompatActivity {
             case R.id.Symptom_inflamedNasal:
                 if(checked)
                 {
-                    daySymptoms.add("Inflamed nasal passage");
+                    daySymptoms.add("Inflamed nasal passages");
                     if(olderDateSelected == true)
                     {
                         ((CheckBox)view).setChecked(true);
@@ -364,8 +365,8 @@ public class CalendarPage extends AppCompatActivity {
                 }
                 else
                 {
-                    if(daySymptoms.contains("Inflamed nasal passage")) {
-                        daySymptoms.remove("Inflamed nasal passage");
+                    if(daySymptoms.contains("Inflamed nasal passages")) {
+                        daySymptoms.remove("Inflamed nasal passages");
                     }
                     ((CheckBox)view).setChecked(false);
                 }
@@ -455,6 +456,7 @@ public class CalendarPage extends AppCompatActivity {
         if(todaySymptoms != null)
         {
             globalState.setTodaySymptomEntries(todaySymptoms);
+            globalState.setDailySymptomsComplete(true);
         }
 
         //gson.toJson(symptomMap);
@@ -462,7 +464,12 @@ public class CalendarPage extends AppCompatActivity {
 
         //System.out.println("Elements of ArrayList of String Type: " + symptomMap);
 
-        String todaysSuggestionText = String.join(", ", globalState.getTodaysSuggestion());
+        suggestions = new Suggestions(this);
+        ArrayList<String> suggestionsText = suggestions.getCurrentDaySuggestions();
+        String todaysSuggestionText = "Remember to check today's pollen forecast!";
+        if (suggestionsText.size()>0) {
+            todaysSuggestionText = String.join(" ", suggestionsText);
+        }
 
         //System.out.println("today's suggestiont text = " + todaysSuggestionText);
 
