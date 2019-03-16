@@ -18,12 +18,21 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import static com.example.whatsmyallergy.MainActivity.globalState;
 
 public class MapPage extends AppCompatActivity implements OnMapReadyCallback {
 
     private TextView mTextMessage;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+
+    private String uid;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -34,18 +43,23 @@ public class MapPage extends AppCompatActivity implements OnMapReadyCallback {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     intent = new Intent(MapPage.this, MainActivity.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    intent.putExtra("uid", uid);
                     return true;
                 case R.id.navigation_profile:
                     intent = new Intent(MapPage.this, ProfilePage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_calendar:
                     intent = new Intent(MapPage.this, CalendarPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_settings:
                     intent = new Intent(MapPage.this, SettingsPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
             }
@@ -58,6 +72,24 @@ public class MapPage extends AppCompatActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_page);
         setTitle("Map");
+
+        Intent intent = getIntent();
+        uid = intent.getStringExtra("uid");
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("Users");
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

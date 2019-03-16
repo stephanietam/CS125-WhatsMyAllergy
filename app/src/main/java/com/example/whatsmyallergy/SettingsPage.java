@@ -57,6 +57,11 @@ import org.json.JSONObject;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import static com.example.whatsmyallergy.MainActivity.globalState;
 
@@ -77,6 +82,9 @@ import static com.example.whatsmyallergy.MainActivity.globalState;
 public class SettingsPage extends AppCompatActivity {
 
     private NotificationUtils mNotificationUtils;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private String uid;
 
     //private GlobalState state = new GlobalState();
     private static final String TAG = SettingsPage.class.getSimpleName();
@@ -165,18 +173,22 @@ public class SettingsPage extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     intent = new Intent(SettingsPage.this, MainActivity.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_profile:
                     intent = new Intent(SettingsPage.this, ProfilePage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_map:
                     intent = new Intent(SettingsPage.this, MapPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_calendar:
                     intent = new Intent(SettingsPage.this, CalendarPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
             }
@@ -187,13 +199,29 @@ public class SettingsPage extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         mNotificationUtils = new NotificationUtils(this);
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_settings_page);
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_page);
         setTitle("Settings");
+
+        Intent intent = getIntent();
+        uid = intent.getStringExtra("uid");
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("Users");
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //this is the only place that the user's information can be be retrieved and can't be accessed out of this loop because it can't capture the data
+                Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

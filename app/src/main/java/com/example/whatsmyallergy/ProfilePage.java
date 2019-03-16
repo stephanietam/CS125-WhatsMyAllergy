@@ -55,18 +55,22 @@ public class ProfilePage extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     intent = new Intent(ProfilePage.this, MainActivity.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_map:
                     intent = new Intent(ProfilePage.this, MapPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_calendar:
                     intent = new Intent(ProfilePage.this, CalendarPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_settings:
                     intent = new Intent(ProfilePage.this, SettingsPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
             }
@@ -110,10 +114,10 @@ public class ProfilePage extends AppCompatActivity {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //this is the only place that the user's information can be be retrieved and can't be accessed out of this loop because it can't capture the data
                 Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
                 userNameText.setText(currentUser.userName);
                 userDOB.setText(currentUser.userDOB);
-                System.out.println("+++++++++++++++++++++++++++++++++" + currentUser.pets + currentUser.familyHistory + currentUser.knownAllergens);
                 petSwitch.setChecked(currentUser.pets);
                 ArrayAdapter<String> knownAdpater = new ArrayAdapter<>(ProfilePage.this, android.R.layout.simple_list_item_1, currentUser.knownAllergens);
                 ArrayAdapter<String> historyAdpater = new ArrayAdapter<>(ProfilePage.this, android.R.layout.simple_list_item_1, currentUser.familyHistory);

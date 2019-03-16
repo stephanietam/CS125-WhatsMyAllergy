@@ -16,6 +16,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +30,9 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     static GlobalState globalState;
     private Suggestions suggestions;
+
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
     private String uid;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -40,14 +49,17 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_map:
                     intent = new Intent(MainActivity.this, MapPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_calendar:
                     intent = new Intent(MainActivity.this, CalendarPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_settings:
                     intent = new Intent(MainActivity.this, SettingsPage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 }
@@ -63,6 +75,24 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
+
+        System.out.println("+++++++++++++++++++++++" + uid + "+++++++++++++++++++++++++++++++");
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("Users");
+
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //this is the only place that the user's information can be be retrieved and can't be accessed out of this loop because it can't capture the data
+                Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         globalState = (GlobalState)getApplication();
 
