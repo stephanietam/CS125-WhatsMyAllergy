@@ -25,9 +25,9 @@
     <string name="title_activity_settings_page">SettingsPage</string>
     <string name="title_activity_settings_page_title">Settings</string>
     <string name="title_activity_settings_page_name">Name</string>
-    <string name="title_activity_settings_page_name_value">Ramesh Jain</string>
+    <string name="title_activity_settings_page_name_value">Peter Anteater</string>
     <string name="title_activity_settings_page_age">Age</string>
-    <string name="title_activity_settings_page_age_value">52</string>
+    <string name="title_activity_settings_page_age_value">54</string>
     <string name="title_activity_settings_page_location">Location</string>
     <string name="title_activity_settings_page_enable">Enable</string>
     <string name="title_activity_settings_page_disable">Disable</string>

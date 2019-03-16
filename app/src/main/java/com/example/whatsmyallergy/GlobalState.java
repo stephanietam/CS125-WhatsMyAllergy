@@ -5,6 +5,8 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +42,8 @@ public class GlobalState extends Application {
 
     private FiveDayForecast fiveDayForecast;
 
+    public ArrayList<String> todaysSuggestion;
+
     public GlobalState() {
         locationSet = false;
         currentSeason = setSeason();
@@ -47,18 +51,24 @@ public class GlobalState extends Application {
         postalCode = prevPostalCode = "92506"; // postalCode should be taken from profile, prevPostalCode is to look for new change in location
         // need to set latlng in MainActivity
 
-        nearbyPostalCodes = new HashMap<>(); // "Zipcode": [lat, lng, serverity] nearby areas to get pollen counts for the map
+        nearbyPostalCodes = new HashMap<>(); // "Zipcode": [lat, lng, severity] nearby areas to get pollen counts for the map
 
         //settings --> location
         currentGlobalLocation = new double[] {0,0}; // TO DO: Should be taken from zipcode
 
         // Sample symptoms -- Should be taken from profile
-        todaySymptoms = new ArrayList<>();
-        todaySymptoms.add("watery_eyes");
-        todaySymptoms.add("stuffy_nose");
-        todaySymptoms.add("coughing");
-        todaySymptoms.add("fatigue");
-        todaySymptoms.add("itchy_throat");
+        //todaySymptoms = new ArrayList<String>();
+        todaySymptoms = new ArrayList<String>();
+        System.out.println("Today's symptoms in global state = " + todaySymptoms);
+
+        todaysSuggestion = new ArrayList<String>();
+        System.out.println("Today's suggestions in global state = " + todaysSuggestion);
+
+//        todaySymptoms.add("watery_eyes");
+//        todaySymptoms.add("stuffy_nose");
+//        todaySymptoms.add("coughing");
+//        todaySymptoms.add("fatigue");
+//        todaySymptoms.add("itchy_throat");
 
         calendarEntries = new HashMap<String, ArrayList<String>>();
     }
@@ -72,10 +82,38 @@ public class GlobalState extends Application {
         return entry;
     }
 
+    public Map<String, ArrayList<String>> getGlobalCalendarEntries()
+    {
+        return calendarEntries;
+    }
+
     public String calendarEntriesLength () {
         return (""+ calendarEntries.size());
     }
 
+    public void setTodaySymptomEntries(ArrayList<String> arrList)
+    {
+        if(arrList != null) {
+            todaySymptoms.addAll(arrList);
+            //System.out.println("Today's symptoms in global state = " + todaySymptoms);
+        }
+    }
+
+    public void setCalendarEntries(Map<String, ArrayList<String>> savedMap) {
+        calendarEntries.putAll(savedMap);
+
+        //System.out.println("Global state map = " + calendarEntries);
+    }
+
+    public void setTodaySuggestion(ArrayList<String> suggestion){
+        todaysSuggestion.addAll(suggestion);
+        System.out.println("setSuggestions = " + todaysSuggestion);
+    }
+
+    public ArrayList<String> getTodaysSuggestion(){
+        System.out.println("getSuggestions = " + todaysSuggestion);
+        return todaysSuggestion;
+    }
 
     /**
      * APIs

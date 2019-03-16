@@ -62,7 +62,12 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
-                }
+                case R.id.piechart:
+                    intent = new Intent(MainActivity.this, ProfilePage.class);
+                    intent.putExtra("uid", uid);
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    return true;
+            }
             return false;
         }
     };
@@ -126,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         symptoms_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                globalState.setDailySymptomsComplete(true);
                 Intent intent = new Intent(MainActivity.this, CalendarPage.class);
                 startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
