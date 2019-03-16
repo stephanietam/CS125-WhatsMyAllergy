@@ -1,9 +1,13 @@
 package com.example.whatsmyallergy;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -13,13 +17,55 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
+
+
 public class pieChart extends AppCompatActivity {
+    private TextView mTextMessage;
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Intent intent;
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    intent = new Intent(pieChart.this, MainActivity.class);
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    return true;
+                case R.id.navigation_map:
+                    intent = new Intent(pieChart.this, MapPage.class);
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    return true;
+                case R.id.navigation_calendar:
+                    intent = new Intent(pieChart.this, CalendarPage.class);
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    return true;
+                case R.id.navigation_settings:
+                    intent = new Intent(pieChart.this, SettingsPage.class);
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    return true;
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pie_chart);
 
+
+        //
+
+
+        setTitle("Profile");
+
+        mTextMessage = (TextView) findViewById(R.id.message);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        MenuItem menuItem = navigation.getMenu().getItem(1);
+        menuItem.setChecked(true);
 
         //PIE CHART
 

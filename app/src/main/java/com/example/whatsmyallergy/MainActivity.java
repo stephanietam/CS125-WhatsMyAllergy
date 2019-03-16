@@ -47,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, SettingsPage.class);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
+                case R.id.piechart:
+                    intent = new Intent(MainActivity.this, ProfilePage.class);
+                    startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    return true;
             }
             return false;
         }
