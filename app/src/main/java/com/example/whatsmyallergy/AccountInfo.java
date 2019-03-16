@@ -214,7 +214,9 @@ public class AccountInfo extends AppCompatActivity {
                 String key = userBundle.getString("uid");
                 Users user = new Users(key, userBundle.getString("email"), editName.getText().toString(),editDOB.getText().toString(), editZip.getText().toString(), petBool, knownAllergenList, familyHistoryList);
                 myRef.child(key).setValue(user);
-                startActivity(new Intent(AccountInfo.this, MainActivity.class));
+                Intent intent = new Intent(AccountInfo.this, MainActivity.class);
+                intent.putExtra("uid", key);
+                startActivity(intent);
             }
         });
 

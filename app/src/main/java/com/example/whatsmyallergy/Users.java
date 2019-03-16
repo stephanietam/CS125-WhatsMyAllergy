@@ -13,6 +13,19 @@ public class Users {
     ArrayList<String> knownAllergens;
     ArrayList<String> familyHistory;
 
+
+    Users ()
+    {
+        this.userUID = "";
+        this.userName = "";
+        this.userEmail ="";
+        this.userZip ="";
+        this.userDOB ="";
+        this.pets = false;
+        this.knownAllergens = new ArrayList<>();
+        this.familyHistory = new ArrayList<>();
+    }
+
     Users (String uid, String email, String name, String DOB, String zip, boolean pets, ArrayList<String> ka, ArrayList<String> fh)
     {
         this.userUID = uid;

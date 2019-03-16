@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     static GlobalState globalState;
     private Suggestions suggestions;
+    private String uid;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_profile:
                     intent = new Intent(MainActivity.this, ProfilePage.class);
+                    intent.putExtra("uid", uid);
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 case R.id.navigation_map:
@@ -48,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     return true;
                 }
-            }
             return false;
         }
     };
@@ -58,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Home");
+
+        Intent intent = getIntent();
+        uid = intent.getStringExtra("uid");
 
         globalState = (GlobalState)getApplication();
 
@@ -100,6 +105,12 @@ public class MainActivity extends AppCompatActivity {
         // Bottom Navigation
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    //disables the back button on the homepage
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(getApplicationContext(), "Back press disabled!", Toast.LENGTH_SHORT).show();
     }
 
     public double[] findLatLng(String postalCode) {

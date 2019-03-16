@@ -3,9 +3,13 @@ package com.example.whatsmyallergy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.telecom.Call;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -16,14 +20,31 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 
 public class ProfilePage extends AppCompatActivity {
 
-    private TextView mTextMessage;
+//    private TextView mTextMessage;
+    private TextView userNameText,userDOB;
+    private Switch petSwitch;
+    private ListView knownAllergy, familyHistory;
+
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+
+    private String uid;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -53,31 +74,58 @@ public class ProfilePage extends AppCompatActivity {
         }
     };
 
+    private void lookup() {
+        userNameText = findViewById(R.id.UserName);
+        userDOB = findViewById(R.id.UserDOB);
+        petSwitch = findViewById(R.id.PetSwitch);
+        knownAllergy = findViewById(R.id.allergyListView);
+        familyHistory = findViewById(R.id.familyHistoryListView);
+
+
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
         setTitle("Profile");
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        Intent intent = getIntent();
+        uid = intent.getStringExtra("uid");
+
+
+//        mTextMessage = findViewById(R.id.message);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         MenuItem menuItem = navigation.getMenu().getItem(1);
         menuItem.setChecked(true);
 
+        lookup();
 
-        ListView knownAllergy = findViewById(R.id.allergyListView);
-        String[] values = new String[] { "Ragweed", "Mold", "Pets",
-                        "Grass"};
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("Users");
 
-        final ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < values.length; ++i) {
-            list.add(values[i]);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-        knownAllergy.setAdapter(adapter);
-        ListView familyHistory = findViewById(R.id.familyHistoryListView);
-        familyHistory.setAdapter(adapter);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+                userNameText.setText(currentUser.userName);
+                userDOB.setText(currentUser.userDOB);
+                System.out.println("+++++++++++++++++++++++++++++++++" + currentUser.pets + currentUser.familyHistory + currentUser.knownAllergens);
+                petSwitch.setChecked(currentUser.pets);
+                ArrayAdapter<String> knownAdpater = new ArrayAdapter<>(ProfilePage.this, android.R.layout.simple_list_item_1, currentUser.knownAllergens);
+                ArrayAdapter<String> historyAdpater = new ArrayAdapter<>(ProfilePage.this, android.R.layout.simple_list_item_1, currentUser.familyHistory);
+                knownAllergy.setAdapter(knownAdpater);
+                familyHistory.setAdapter(historyAdpater);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         //PIE CHART
