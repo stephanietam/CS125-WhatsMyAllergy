@@ -22,6 +22,12 @@ import java.util.Map;
 import java.util.List;
 import java.util.Arrays;
 import android.widget.LinearLayout;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -130,6 +136,7 @@ public class CalendarPage extends AppCompatActivity {
         System.out.println("global state hash map = " + convertedSymptomMap);
 
         currentDate = new SimpleDateFormat("M/dd/yyyy").format(Calendar.getInstance().getTime());
+
         System.out.println("Current Date : " + currentDate);
 
         currentDateArr = currentDate.split("/");
