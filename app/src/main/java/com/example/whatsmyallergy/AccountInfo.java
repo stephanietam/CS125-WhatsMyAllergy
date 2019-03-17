@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public class AccountInfo extends AppCompatActivity {
     private EditText editName, editDOB, editZip;
     private Switch petSwitch;
     private String petStr;
+    private ScrollView mainScroll;
     boolean petBool;
     ArrayList<String> knownAllergenList;
     ArrayList<String> familyHistoryList;
@@ -94,6 +96,7 @@ public class AccountInfo extends AppCompatActivity {
         moldFH = findViewById(R.id.mold_check_fh);
         dustFH = findViewById(R.id.dust_check_fh);
         petFH = findViewById(R.id.pet_check_fh);
+        mainScroll = findViewById(R.id.mainScrollView);
 
     }
 
@@ -185,6 +188,7 @@ public class AccountInfo extends AppCompatActivity {
         knownAllergenList = new ArrayList<>();
         familyHistoryList = new ArrayList<>();
         getID();
+        mainScroll.requestFocus();
         addOnClicks();
         petBool = false;
         editName.addTextChangedListener(textWatcher);
