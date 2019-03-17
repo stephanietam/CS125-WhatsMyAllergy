@@ -75,8 +75,8 @@ public class AccountInfo extends AppCompatActivity {
             return false;
         }
         return true;
-
     }
+
 
     private void getID ()
     {
