@@ -518,6 +518,7 @@ public class CalendarPage extends AppCompatActivity {
         if(symptomMap.containsKey(currentDate))
         {
             Intent intent = new Intent(CalendarPage.this, MainActivity.class);
+            intent.putExtra("uid", uid);
             startActivity(intent);
         }
     }
