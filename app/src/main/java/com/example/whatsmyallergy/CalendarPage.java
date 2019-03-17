@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Button;
@@ -39,12 +40,13 @@ import static com.example.whatsmyallergy.MainActivity.globalState;
 
 public class CalendarPage extends AppCompatActivity {
     private Suggestions suggestions;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+
+    private String uid;
 
     private NotificationUtils mNotificationUtils;
 
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
-    private String uid;
     private Object handleObject(JsonObject json, JsonDeserializationContext context) {
         Map<String, Object> map = new HashMap<String, Object>();
         for(Map.Entry<String, JsonElement> entry : json.entrySet())
@@ -110,7 +112,6 @@ public class CalendarPage extends AppCompatActivity {
         setContentView(R.layout.activity_calendar_page);
         setTitle("Calendar");
 
-
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
 
@@ -130,13 +131,12 @@ public class CalendarPage extends AppCompatActivity {
             }
         });
 
-        currentDate = new SimpleDateFormat("MM/dd/yyyy").format(Calendar.getInstance().getTime());
+
         //Map<String, ArrayList<String>> convertedSymptomMap = new HashMap<String, ArrayList<String>>();
         convertedSymptomMap = globalState.getGlobalCalendarEntries();
         System.out.println("global state hash map = " + convertedSymptomMap);
 
         currentDate = new SimpleDateFormat("M/dd/yyyy").format(Calendar.getInstance().getTime());
-
         System.out.println("Current Date : " + currentDate);
 
         currentDateArr = currentDate.split("/");
@@ -518,6 +518,7 @@ public class CalendarPage extends AppCompatActivity {
         if(symptomMap.containsKey(currentDate))
         {
             Intent intent = new Intent(CalendarPage.this, MainActivity.class);
+            intent.putExtra("uid", uid);
             startActivity(intent);
         }
     }
