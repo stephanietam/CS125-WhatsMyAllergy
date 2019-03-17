@@ -21,16 +21,28 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-
+import static com.example.whatsmyallergy.MainActivity.globalState;
 
 
 public class pieChart extends AppCompatActivity {
     private TextView mTextMessage;
-
-
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private String uid;
+    ArrayList<String> todaySymptoms;
+
+    float runnynose_index = 1;
+    float watereyes_index = 1;
+    float sneezing_index = 1;
+    float coughing_index = 1;
+    float itchyeyes_index = 1;
+    float darkcircles_index = 1;
+    float inflamednasal_index = 5;
+    float itchythroat_index = 3;
+    float skin_index = 2;
+    float earpressure_index = 1;
+    float fatigue_index = 1;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -71,8 +83,6 @@ public class pieChart extends AppCompatActivity {
 
 
         //
-
-
         setTitle("Profile");
 
         mTextMessage = (TextView) findViewById(R.id.message);
@@ -102,41 +112,81 @@ public class pieChart extends AppCompatActivity {
             }
         });
 
+        todaySymptoms = globalState.getTodaySymptoms();
 
+        if(todaySymptoms != null){
+            //for(int i = 0; i < todaySymptoms.size(); ++i){
+            for(String s : todaySymptoms){
+                if(s == "Runny nose"){
+                    ++runnynose_index;
+                }
+                else if(s=="Watery eyes"){
+                    ++watereyes_index;
+                }
+                else if(s=="Sneezing"){
+                    ++sneezing_index;
+                }
+                else if(s == "Coughing"){
+                    ++coughing_index;
+                }
+                else if(s=="Itchy eyes and nose"){
+                    ++itchyeyes_index;
+                }
+                else if(s == "Dark circles"){
+                    ++darkcircles_index;
+                }
+                else if(s == "Inflamed nasal passage"){
+                    ++inflamednasal_index;
+                }
+                else if(s == "Itchy throat and mouth"){
+                    ++itchythroat_index;
+                }
+                else if(s == "Skin reactions"){
+                    ++skin_index;
+                }
+                else if(s == "Ear pressure"){
+                    ++earpressure_index;
+                }
+                else if(s == "Fatigue"){
+                    ++fatigue_index;
+                }
+            }
+        }
+        else{
+            System.out.println("symptom list empty in pie chart");
+        }
 
         //PIE CHART
 
         PieChart pieChart = findViewById(R.id.piechart);
         ArrayList NoOfSymptoms = new ArrayList();
 
-        NoOfSymptoms.add(new Entry(12, 0));
-        NoOfSymptoms.add(new Entry(4f, 1));
-        NoOfSymptoms.add(new Entry(7f, 2));
-        NoOfSymptoms.add(new Entry(9f, 3));
-        NoOfSymptoms.add(new Entry(1f, 4));
-        NoOfSymptoms.add(new Entry(12, 5));
-        NoOfSymptoms.add(new Entry(4f, 6));
-        NoOfSymptoms.add(new Entry(22f, 7));
-        NoOfSymptoms.add(new Entry(9f, 8));
-        NoOfSymptoms.add(new Entry(11f, 9));
-        NoOfSymptoms.add(new Entry(1f, 10));
+        NoOfSymptoms.add(new Entry(runnynose_index, 0));
+        NoOfSymptoms.add(new Entry(watereyes_index, 1));
+        NoOfSymptoms.add(new Entry(sneezing_index, 2));
+        NoOfSymptoms.add(new Entry(coughing_index, 3));
+        NoOfSymptoms.add(new Entry(itchyeyes_index, 4));
+        NoOfSymptoms.add(new Entry(darkcircles_index, 5));
+        NoOfSymptoms.add(new Entry(inflamednasal_index, 6));
+        NoOfSymptoms.add(new Entry(itchythroat_index, 7));
+        NoOfSymptoms.add(new Entry(skin_index, 8));
+        NoOfSymptoms.add(new Entry(earpressure_index, 9));
+        NoOfSymptoms.add(new Entry(fatigue_index, 10));
         PieDataSet dataSet = new PieDataSet(NoOfSymptoms, "Symptoms Per MONTH NAME");
 
         ArrayList symptoms = new ArrayList();
 
-        symptoms.add("Runny Nose");
-        symptoms.add("Watery Eyes");
+        symptoms.add("Runny nose");
+        symptoms.add("Watery eyes");
         symptoms.add("Sneezing");
         symptoms.add("Coughing");
-
-        symptoms.add("Itchy Eyes and Nose");
-        symptoms.add("Dark Circles Under Eyes");
-        symptoms.add("Inflamed Nasal Passages");
-        symptoms.add("Itchy Throat and Mouth");
-        symptoms.add("Skin Reactions");
-        symptoms.add("Ear Pressure");
+        symptoms.add("Itchy eyes and nose");
+        symptoms.add("Dark circles Under eyes");
+        symptoms.add("Inflamed nasal passages");
+        symptoms.add("Itchy throat and mouth");
+        symptoms.add("Skin reactions");
+        symptoms.add("Ear pressure");
         symptoms.add("Fatigue");
-
 
         PieData data = new PieData(symptoms, dataSet);
         pieChart.setData(data);

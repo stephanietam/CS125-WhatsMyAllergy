@@ -132,7 +132,7 @@ public class CalendarPage extends AppCompatActivity {
         });
 
 
-        //Map<String, ArrayList<String>> convertedSymptomMap = new HashMap<String, ArrayList<String>>();
+        convertedSymptomMap = new HashMap<String, ArrayList<String>>();
         convertedSymptomMap = globalState.getGlobalCalendarEntries();
         System.out.println("global state hash map = " + convertedSymptomMap);
 

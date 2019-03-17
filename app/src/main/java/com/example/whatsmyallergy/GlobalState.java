@@ -156,6 +156,7 @@ public class GlobalState extends Application {
         this.fiveDayForecast = fiveDayForecast;
     }
 
+
     public FiveDayForecast getFiveDayForecast() {
         return fiveDayForecast;
     }
