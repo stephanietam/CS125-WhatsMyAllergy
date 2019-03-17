@@ -93,6 +93,7 @@ public class ProfilePage extends AppCompatActivity {
     public void onChart(View view) {
 
         Intent intent = new Intent(ProfilePage.this, pieChart.class);
+        intent.putExtra("uid", uid);
         startActivity(intent);
     }
 
