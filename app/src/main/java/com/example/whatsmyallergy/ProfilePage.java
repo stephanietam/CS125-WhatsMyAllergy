@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.telecom.Call;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;

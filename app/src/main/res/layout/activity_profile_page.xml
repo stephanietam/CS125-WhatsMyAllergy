@@ -84,7 +84,7 @@
             app:layout_constraintTop_toBottomOf="@+id/DOBText" />
 
         <TextView
-            android:id="@+id/knownAllergyText"
+            android:id="@+id/knownText"
             android:layout_width="115dp"
             android:layout_height="35dp"
             android:layout_marginStart="8dp"
@@ -148,7 +148,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/knownAllergyText"
+            app:layout_constraintBottom_toTopOf="@+id/knownText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/PetText"
             app:layout_constraintTop_toBottomOf="@+id/UserDOB" />
@@ -164,7 +164,7 @@
             android:layout_marginRight="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/knownAllergyText" />
+            app:layout_constraintTop_toBottomOf="@+id/knownText" />
 
         <ListView
             android:id="@+id/familyHistoryListView"
