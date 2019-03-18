@@ -324,16 +324,16 @@
                         tools:layout_editor_absoluteY="361dp" />
 
                     <CheckBox
-                        android:id="@+id/mold_check_fh"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Mold" />
-
-                    <CheckBox
                         android:id="@+id/ragweed_check_fh"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Ragweed" />
+
+                    <CheckBox
+                        android:id="@+id/mold_check_fh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Mold" />
 
                     <CheckBox
                         android:id="@+id/dust_check_fh"
