@@ -82,7 +82,7 @@ import static com.example.whatsmyallergy.MainActivity.globalState;
 public class SettingsPage extends AppCompatActivity {
 
     private NotificationUtils mNotificationUtils;
-    private TextView nameValue;
+    private TextView nameValue, ageValue;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private String uid;
@@ -207,6 +207,7 @@ public class SettingsPage extends AppCompatActivity {
         setTitle("Settings");
 
         nameValue = findViewById(R.id.settings_nameValue);
+        ageValue = findViewById(R.id.settings_ageValue);
 
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
@@ -219,6 +220,7 @@ public class SettingsPage extends AppCompatActivity {
                 //this is the only place that the user's information can be be retrieved and can't be accessed out of this loop because it can't capture the data
                 Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
                 nameValue.setText(currentUser.userName);
+                System.out.println(currentUser.age());
             }
 
             @Override
@@ -227,8 +229,8 @@ public class SettingsPage extends AppCompatActivity {
             }
         });
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        mTextMessage = findViewById(R.id.message);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         MenuItem menuItem = navigation.getMenu().getItem(4);
         menuItem.setChecked(true);

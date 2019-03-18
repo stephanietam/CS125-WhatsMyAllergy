@@ -107,5 +107,14 @@ public class Users {
         return valid_date.toString();
     }
 
+    public int age()
+    {
+
+        int dob = Integer.valueOf(check_valid(this.userDOB));
+        int today = Integer.valueOf(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime())));
+        return (today-dob)/10000;
+
+
+    }
 
 }
