@@ -76,20 +76,20 @@ public class MapPage extends AppCompatActivity implements OnMapReadyCallback {
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
 
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("Users");
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        database = FirebaseDatabase.getInstance();
+//        myRef = database.getReference("Users");
+//
+//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

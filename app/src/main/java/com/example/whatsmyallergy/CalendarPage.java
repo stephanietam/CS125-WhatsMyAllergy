@@ -122,7 +122,9 @@ public class CalendarPage extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //this is the only place that the user's information can be be retrieved and can't be accessed out of this loop because it can't capture the data
-                Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+                if (uid != null) {
+                    Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+                }
             }
 
             @Override

@@ -103,7 +103,9 @@ public class pieChart extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //this is the only place that the user's information can be be retrieved and can't be accessed out of this loop because it can't capture the data
-                Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+                if (uid != null) {
+                    Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+                }
             }
 
             @Override
@@ -199,6 +201,7 @@ public class pieChart extends AppCompatActivity {
     public void onBack(View view) {
 
         Intent intent = new Intent(pieChart.this, ProfilePage.class);
+        intent.putExtra("uid", uid);
         startActivity(intent);
     }
 }

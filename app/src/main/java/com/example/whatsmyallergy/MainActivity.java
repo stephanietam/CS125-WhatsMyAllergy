@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("Home");
 
+        globalState = (GlobalState)getApplication();
+
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
 
@@ -90,7 +92,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //this is the only place that the user's information can be be retrieved and can't be accessed out of this loop because it can't capture the data
-                Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+                if (uid != null) {
+                    Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
+
+                    Log.d("Print", "Postal code from firebase was set.");
+                    String postalCode = currentUser.userZip;
+                    if (globalState.getPostalCode() != currentUser.userZip) {
+                        globalState.setPostalCode(postalCode);
+                        double[] latlng = findLatLng(postalCode);
+                        globalState.setCurrentGlobalLocation(latlng[0],latlng[1]);
+                    }
+                }
+                setHomePage();
             }
 
             @Override
@@ -99,8 +112,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        globalState = (GlobalState)getApplication();
+        // Waiting for symptoms button click
+        Button symptoms_button = (Button) findViewById(R.id.symptoms_button);
+        symptoms_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CalendarPage.class);
+                intent.putExtra("uid", uid);
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            }
+        });
 
+        // Bottom Navigation
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    public void setHomePage() {
         double[] loc = globalState.getLatLong();
         if (loc[0] == 0 && loc[1] == 0) {
             String postalCode = globalState.getPostalCode();
@@ -121,25 +149,12 @@ public class MainActivity extends AppCompatActivity {
         if (!globalState.checkLocationIsSet() ||
                 globalState.prevPostalCode!=currentPostalCode) { // OR location is different
             globalState.prevPostalCode = globalState.getPostalCode();
+
+            // Calls API
 //            AsyncTask asyncTask = new AccuWeatherApi(this).execute();
         } else {
             setTextViews();
         }
-
-        // Waiting for symptoms button click
-        Button symptoms_button = (Button) findViewById(R.id.symptoms_button);
-        symptoms_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CalendarPage.class);
-                intent.putExtra("uid", uid);
-                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-            }
-        });
-
-        // Bottom Navigation
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     //disables the back button on the homepage

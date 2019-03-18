@@ -135,10 +135,13 @@ public class AccuWeatherApi extends AsyncTask<Void, Void, Void> {
                 for (int j = 0; j < pollens.length(); ++j) {
                     JSONObject pollen = pollens.getJSONObject(j);
 //                    Log.d("Print",pollen.toString());
-                    pollenList.add(new Pollen(pollen.getString("Name"),
-                            Integer.parseInt(pollen.getString("Value")),
-                            pollen.getString("Category"),
-                            pollen.getString("CategoryValue")));
+                    String pollenName = pollen.getString("Name");
+                    if (pollenName != "UVIndex") {
+                        pollenList.add(new Pollen(pollen.getString("Name"),
+                                Integer.parseInt(pollen.getString("Value")),
+                                pollen.getString("Category"),
+                                pollen.getString("CategoryValue")));
+                    }
                 }
 
                 String dateString = dailyForecasts.getJSONObject(i).getString("Date").substring(0,10);
