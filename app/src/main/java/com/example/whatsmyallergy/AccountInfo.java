@@ -17,7 +17,10 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.StringTokenizer;
 
 public class AccountInfo extends AppCompatActivity {
 
@@ -55,7 +58,6 @@ public class AccountInfo extends AppCompatActivity {
     };
 
 
-
     private void checkComplete() {
         String userName = editName.getText().toString();
         String userDOB = editDOB.getText().toString();
@@ -75,8 +77,8 @@ public class AccountInfo extends AppCompatActivity {
             return false;
         }
         return true;
-
     }
+
 
     private void getID ()
     {
@@ -214,13 +216,26 @@ public class AccountInfo extends AppCompatActivity {
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                petBool = Boolean.valueOf(petStr);
-                String key = userBundle.getString("uid");
-                Users user = new Users(key, userBundle.getString("email"), editName.getText().toString(),editDOB.getText().toString(), editZip.getText().toString(), petBool, knownAllergenList, familyHistoryList);
-                myRef.child(key).setValue(user);
-                Intent intent = new Intent(AccountInfo.this, MainActivity.class);
-                intent.putExtra("uid", key);
-                startActivity(intent);
+                Users user = new Users();
+                if (user.isAlpha(editName.getText().toString()) && !user.check_valid(editDOB.getText().toString()).equals("")) {
+                    petBool = Boolean.valueOf(petStr);
+                    String key = userBundle.getString("uid");
+                    user = new Users(key, userBundle.getString("email"), editName.getText().toString(), editDOB.getText().toString(), editZip.getText().toString(), petBool, knownAllergenList, familyHistoryList);
+                    myRef.child(key).setValue(user);
+                    Intent intent = new Intent(AccountInfo.this, MainActivity.class);
+                    intent.putExtra("uid", key);
+                    startActivity(intent);
+                }
+                else if (!user.isAlpha(editName.getText().toString())){
+                    Toast.makeText(AccountInfo.this, "Enter a valid name.", Toast.LENGTH_SHORT).show();
+                }
+                else if (user.check_valid(editDOB.getText().toString()).equals("")) {
+                    Toast.makeText(AccountInfo.this, "Enter a valid date.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(AccountInfo.this, "Can't create account. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
