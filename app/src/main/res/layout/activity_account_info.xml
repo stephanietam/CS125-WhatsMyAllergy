@@ -41,7 +41,7 @@
                 android:weightSum="2">
 
                 <Button
-                    android:id="@+id/finishButton"
+                    android:id="@+id/finish1Button"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginLeft="20dp"
@@ -104,9 +104,9 @@
                     android:layout_weight="0.6"
                     android:gravity="right|center_vertical"
                     android:paddingLeft="10dp"
-                    android:text="Date of Birth:"
+                    android:text="Date of Birth: (MM/DD/YYYY):"
                     android:textColor="#000"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -349,6 +349,28 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/finishBottomLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/finish2Button"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight=".5"
+                    android:paddingLeft="10dp"
+
+                    android:paddingRight="10dp"
+                    android:text="Finish" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

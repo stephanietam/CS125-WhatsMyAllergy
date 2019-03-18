@@ -1,5 +1,6 @@
 package com.example.whatsmyallergy;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -25,7 +27,7 @@ import java.util.StringTokenizer;
 public class AccountInfo extends AppCompatActivity {
 
     private Bundle userBundle;
-    private Button finishButton;
+    private Button finish1Button, finish2Button;
     private EditText editName, editDOB, editZip;
     private Switch petSwitch;
     private String petStr;
@@ -37,10 +39,16 @@ public class AccountInfo extends AppCompatActivity {
     private CheckBox grassFH, treesFH, ragweedFH, moldFH, dustFH, petFH;
     private ArrayList<CheckBox> allergenKA;
     private ArrayList<CheckBox> allergenFH;
-
+    private InputMethodManager inputMethodManager;
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+
+
+    public void hideKeybord(View view) {
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
+                InputMethodManager.RESULT_UNCHANGED_SHOWN);
+    }
 
     private TextWatcher  textWatcher =new TextWatcher() {
         @Override
@@ -62,9 +70,11 @@ public class AccountInfo extends AppCompatActivity {
         String userName = editName.getText().toString();
         String userDOB = editDOB.getText().toString();
         if (userName.equals("") || userDOB.equals("") || (!checkZip()) || (userName.replaceAll("[^A-Za-z0-9 ]", "").length() == 0)) {
-            finishButton.setEnabled(false);
+            finish1Button.setEnabled(false);
+            finish2Button.setEnabled(false);
         } else {
-            finishButton.setEnabled(true);
+            finish1Button.setEnabled(true);
+            finish2Button.setEnabled(true);
         }
 
     }
@@ -99,6 +109,7 @@ public class AccountInfo extends AppCompatActivity {
         dustFH = findViewById(R.id.dust_check_fh);
         petFH = findViewById(R.id.pet_check_fh);
         mainScroll = findViewById(R.id.mainScrollView);
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
     }
 
@@ -124,6 +135,7 @@ public class AccountInfo extends AppCompatActivity {
             temp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
                     if (temp.isChecked())
                     {
                         if (!knownAllergenList.contains(temp.getText().toString()))
@@ -137,7 +149,6 @@ public class AccountInfo extends AppCompatActivity {
                             knownAllergenList.remove(temp.getText().toString());
                         }
                     }
-
                 }
             });
         }
@@ -148,6 +159,7 @@ public class AccountInfo extends AppCompatActivity {
             temp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
                     if (temp.isChecked())
                     {
                         if (!familyHistoryList.contains(temp.getText().toString()))
@@ -168,6 +180,64 @@ public class AccountInfo extends AppCompatActivity {
 
     }
 
+
+    private void finishSetup () {
+        finish1Button = findViewById(R.id.finish1Button);
+        finish1Button.setEnabled(false);
+        finish1Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Users user = new Users();
+                if (user.isAlpha(editName.getText().toString()) && !user.check_valid(editDOB.getText().toString()).equals("")) {
+                    petBool = Boolean.valueOf(petStr);
+                    String key = userBundle.getString("uid");
+                    user = new Users(key, userBundle.getString("email"), editName.getText().toString(), editDOB.getText().toString(), editZip.getText().toString(), petBool, knownAllergenList, familyHistoryList);
+                    myRef.child(key).setValue(user);
+                    Intent intent = new Intent(AccountInfo.this, MainActivity.class);
+                    intent.putExtra("uid", key);
+                    startActivity(intent);
+                }
+                else if (!user.isAlpha(editName.getText().toString())){
+                    Toast.makeText(AccountInfo.this, "Enter a valid name.", Toast.LENGTH_SHORT).show();
+                }
+                else if (user.check_valid(editDOB.getText().toString()).equals("")) {
+                    Toast.makeText(AccountInfo.this, "Enter a valid date.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(AccountInfo.this, "Can't create account. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        finish2Button = findViewById(R.id.finish2Button);
+        finish2Button.setEnabled(false);
+        finish2Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Users user = new Users();
+                if (user.isAlpha(editName.getText().toString()) && !user.check_valid(editDOB.getText().toString()).equals("")) {
+                    petBool = Boolean.valueOf(petStr);
+                    String key = userBundle.getString("uid");
+                    user = new Users(key, userBundle.getString("email"), editName.getText().toString(), editDOB.getText().toString(), editZip.getText().toString(), petBool, knownAllergenList, familyHistoryList);
+                    myRef.child(key).setValue(user);
+                    Intent intent = new Intent(AccountInfo.this, MainActivity.class);
+                    intent.putExtra("uid", key);
+                    startActivity(intent);
+                }
+                else if (!user.isAlpha(editName.getText().toString())){
+                    Toast.makeText(AccountInfo.this, "Enter a valid name.", Toast.LENGTH_SHORT).show();
+                }
+                else if (user.check_valid(editDOB.getText().toString()).equals("")) {
+                    Toast.makeText(AccountInfo.this, "Enter a valid date.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(AccountInfo.this, "Can't create account. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
 
 
 
@@ -202,6 +272,7 @@ public class AccountInfo extends AppCompatActivity {
         petSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
                if (petSwitch.isChecked()) {
                    petStr = petSwitch.getTextOn().toString();
                }
@@ -211,33 +282,7 @@ public class AccountInfo extends AppCompatActivity {
             }
         });
 
-        finishButton = findViewById(R.id.finishButton);
-        finishButton.setEnabled(false);
-        finishButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Users user = new Users();
-                if (user.isAlpha(editName.getText().toString()) && !user.check_valid(editDOB.getText().toString()).equals("")) {
-                    petBool = Boolean.valueOf(petStr);
-                    String key = userBundle.getString("uid");
-                    user = new Users(key, userBundle.getString("email"), editName.getText().toString(), editDOB.getText().toString(), editZip.getText().toString(), petBool, knownAllergenList, familyHistoryList);
-                    myRef.child(key).setValue(user);
-                    Intent intent = new Intent(AccountInfo.this, MainActivity.class);
-                    intent.putExtra("uid", key);
-                    startActivity(intent);
-                }
-                else if (!user.isAlpha(editName.getText().toString())){
-                    Toast.makeText(AccountInfo.this, "Enter a valid name.", Toast.LENGTH_SHORT).show();
-                }
-                else if (user.check_valid(editDOB.getText().toString()).equals("")) {
-                    Toast.makeText(AccountInfo.this, "Enter a valid date.", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(AccountInfo.this, "Can't create account. Please try again.", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
+        finishSetup();
 
     }
 
