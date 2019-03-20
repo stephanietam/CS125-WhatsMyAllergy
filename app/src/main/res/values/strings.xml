@@ -13,7 +13,8 @@
     <string name="pollen_img_description">desc</string>
     <string name="suggestion_text">Suggestions based on symptoms</string>
     <string name="button_text">Enter Today\'s Symptoms</string>
-    <string name="accu_apikey">HMoCMG0Z9rnwGcuwnVzfOVTbhK77TexE</string>
+    <!--<string name="accu_apikey">HMoCMG0Z9rnwGcuwnVzfOVTbhK77TexE</string>--> <!--Original API key-->
+    <string name="accu_apikey">Z2FTh1EV85RHa5eSlGme1KoSGOGX3YGM</string> <!--Backup API key-->
     <string name="accu_5dayApiURL">http://dataservice.accuweather.com/forecasts/v1/daily/5day/</string>
     <string name="accu_postalCodeApiURL">http://dataservice.accuweather.com/locations/v1/postalcodes/search</string>
     <string name="title_profile">Profile</string>
