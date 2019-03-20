@@ -12,6 +12,7 @@ AccuWeatherApi
 - A class that contains AsyncTask functions which calls the AccuWeather APIs and updates the home page UI with forecasts.
 
 CalendarPage
+- A class where users can log their symptoms for the selected date (default current day) in the calendar.
 
 Day
 - A class that contains properties regarding the date and the pollen that occurs on this day. 
