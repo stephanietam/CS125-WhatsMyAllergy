@@ -3,7 +3,7 @@ What's My Allergy application
 
 What’s My Allergy is an Android mobile application that allows users to record their daily symptoms and provides suggestions that will help them reduce their pollen intake. The application is beneficial to anyone who is allergic to pollen, dust mites, or pets. What’s My Allergy will also provide daily and 5-day pollen counts for areas around the user. Pollen exists year round and many people are affected. With our application, we hope to notify users when pollen counts are high in their area and to provide users with information to help them live healthier lives.
 
-Files:
+Files in app/src/main/java/com/example/whatsmyallergy:
 
 AccountInfo
   - A class that collects information such as their name, date of birth and known allergy information and adds it to the Firebase Database.
