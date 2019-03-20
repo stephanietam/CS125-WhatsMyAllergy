@@ -6,21 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".AccountInfo">
 
-    <!--<Button-->
-        <!--android:id="@+id/finishButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:text="Finish"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_bias="0.0" />-->
-
     <ScrollView
         android:focusableInTouchMode="true"
         android:focusable="true"
@@ -56,7 +41,7 @@
                 android:weightSum="2">
 
                 <Button
-                    android:id="@+id/finishButton"
+                    android:id="@+id/finish1Button"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginLeft="20dp"
@@ -119,9 +104,9 @@
                     android:layout_weight="0.6"
                     android:gravity="right|center_vertical"
                     android:paddingLeft="10dp"
-                    android:text="Date of Birth:"
+                    android:text="Date of Birth: (MM/DD/YYYY):"
                     android:textColor="#000"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -339,16 +324,16 @@
                         tools:layout_editor_absoluteY="361dp" />
 
                     <CheckBox
-                        android:id="@+id/mold_check_fh"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Mold" />
-
-                    <CheckBox
                         android:id="@+id/ragweed_check_fh"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Ragweed" />
+
+                    <CheckBox
+                        android:id="@+id/mold_check_fh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Mold" />
 
                     <CheckBox
                         android:id="@+id/dust_check_fh"
@@ -364,6 +349,28 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/finishBottomLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/finish2Button"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight=".5"
+                    android:paddingLeft="10dp"
+
+                    android:paddingRight="10dp"
+                    android:text="Finish" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

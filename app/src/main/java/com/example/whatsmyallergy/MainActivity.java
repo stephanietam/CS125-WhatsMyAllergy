@@ -3,7 +3,6 @@ package com.example.whatsmyallergy;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -83,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
 
-        System.out.println("+++++++++++++++++++++++" + uid + "+++++++++++++++++++++++++++++++");
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Users");
 

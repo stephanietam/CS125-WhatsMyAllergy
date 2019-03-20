@@ -3,25 +3,15 @@ package com.example.whatsmyallergy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.telecom.Call;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ScrollView;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,17 +19,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 
 public class ProfilePage extends AppCompatActivity {
 
-//    private TextView mTextMessage;
-    private TextView userNameText,userDOB;
+    private TextView userNameText,userDOB, userZip;
     private Switch petSwitch;
-    private ListView knownAllergy, familyHistory;
+    private TextView knownAllergy, familyHistory;
+    private Button overview1Button, overview2Button;
 
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -85,19 +73,41 @@ public class ProfilePage extends AppCompatActivity {
         petSwitch = findViewById(R.id.PetSwitch);
         knownAllergy = findViewById(R.id.allergyListView);
         familyHistory = findViewById(R.id.familyHistoryListView);
-
-
+        userZip = findViewById(R.id.UserZip);
+        overview1Button = findViewById(R.id.overview1Button);
+        overview1Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfilePage.this, pieChart.class);
+                intent.putExtra("uid", uid);
+                startActivity(intent);
+            }
+        });
+        overview2Button = findViewById(R.id.overview2Button);
+        overview2Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfilePage.this, pieChart.class);
+                intent.putExtra("uid", uid);
+                startActivity(intent);
+            }
+        });
     }
 
 
+    private String listToString(ArrayList<String> list)
+    {
+        StringBuffer res = new StringBuffer();
+        if (list.size()!=0) {
+            for (int i = 0; i < list.size() - 1; i++) {
+                res.append(list.get(i));
+                res.append("\n\n");
+            }
+            res.append(list.get(list.size()-1));
 
-    public void onChart(View view) {
-
-        Intent intent = new Intent(ProfilePage.this, pieChart.class);
-        intent.putExtra("uid", uid);
-        startActivity(intent);
+        }
+        return res.toString();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,11 +137,10 @@ public class ProfilePage extends AppCompatActivity {
                 Users currentUser = dataSnapshot.child(uid).getValue(Users.class);
                 userNameText.setText(currentUser.userName);
                 userDOB.setText(currentUser.userDOB);
+                userZip.setText(currentUser.userZip);
                 petSwitch.setChecked(currentUser.pets);
-                ArrayAdapter<String> knownAdpater = new ArrayAdapter<>(ProfilePage.this, android.R.layout.simple_list_item_1, currentUser.knownAllergens);
-                ArrayAdapter<String> historyAdpater = new ArrayAdapter<>(ProfilePage.this, android.R.layout.simple_list_item_1, currentUser.familyHistory);
-                knownAllergy.setAdapter(knownAdpater);
-                familyHistory.setAdapter(historyAdpater);
+                knownAllergy.setText(listToString(currentUser.knownAllergens));
+                familyHistory.setText(listToString(currentUser.familyHistory));
             }
 
             @Override
