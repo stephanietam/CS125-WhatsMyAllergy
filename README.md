@@ -6,6 +6,7 @@ What’s My Allergy is an Android mobile application that allows users to record
 Files:
 
 AccountInfo
+  - A class that collects information such as their name, date of birth and known allergy information and adds it to the Firebase Database.
 
 AccuWeatherApi
 - A class that contains AsyncTask functions which calls the AccuWeather APIs and updates the home page UI with forecasts.
@@ -42,7 +43,8 @@ pieChart
 Pollen
 - A class that contains properties of pollen such as name, value, category, and category value. 
 
-ProfilePage
+ProfilePage 
+- A class where the information user can view their account informantion that they inputted during their signup.
 
 SettingsPage
 - Class where basic account information is stored and location and  notifications may be turned on.
@@ -54,3 +56,4 @@ Suggestions
 - Class that takes in a json file to extract suggestion string. It contains functions that can be used to retrieve suggestions and compare symptoms. 
 
 Users
+- Helper class that allows the system to know what is a user and what their profile looks like. This structure os also used when a user is being added to the Firebase Database. It also contains functions that are useful in checking for valid user information.  
