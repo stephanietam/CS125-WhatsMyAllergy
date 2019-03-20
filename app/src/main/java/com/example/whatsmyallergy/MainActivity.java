@@ -97,10 +97,11 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.d("Print", "Postal code from firebase was set.");
                     String postalCode = currentUser.userZip;
-                    if (globalState.getPostalCode() != currentUser.userZip) {
+                    if (globalState.getPostalCode() != currentUser.userZip && !globalState.checkLocationIsSet()) {
                         globalState.setPostalCode(postalCode);
                         double[] latlng = findLatLng(postalCode);
                         globalState.setCurrentGlobalLocation(latlng[0],latlng[1]);
+//                        globalState.locationSet(true);
                     }
                 }
                 setHomePage();
